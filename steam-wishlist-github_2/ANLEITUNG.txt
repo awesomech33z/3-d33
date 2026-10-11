@@ -1,0 +1,98 @@
+STEAM WISHLIST ANALYZER – App fürs iPhone (GitHub-Version, Version 6)
+=====================================================================
+
+Inhalt
+  TEIL A: Neue Version einspielen (einmalig, jetzt)
+  TEIL B: Vom Handy aus aktualisieren (Zugang einrichten)
+  TEIL C: So benutzt du die App
+  TEIL D: Wenn etwas nicht klappt
+  TEIL E: Erste Einrichtung (nur für Neueinsteiger, falls du alles neu aufsetzt)
+
+Wichtig zur Privatsphäre
+- Die Seite ist öffentlich erreichbar (private Seiten kosten bei GitHub Geld). Wer die Adresse kennt, sieht deine
+  Wunschliste, deine Spieleliste und die Preisdaten.
+- Dein Steam-Schlüssel steht nirgends in den Dateien, er liegt als "Secret" bei GitHub.
+- Der GitHub-Zugangsschlüssel aus Teil B bleibt nur auf deinem Handy.
+
+
+TEIL A: Neue Version einspielen (am PC, ca. 5 Minuten)
+-------------------------------------------------------
+Das ist der Weg, wie du jedes Update von mir einspielst. Du musst dafür nichts löschen.
+
+1. Entpacke das ZIP auf dem PC. Es entsteht ein Ordner "steam-wishlist-github".
+2. Öffne dein Repository auf github.com. Bleib auf der HAUPTSEITE (nicht in einem Ordner).
+3. Klick "Add file" > "Upload files".
+4. Zieh den ganzen Ordner "steam-wishlist-github" (nicht nur den Inhalt) auf die große Fläche.
+   Er hat denselben Aufbau wie dein Repository, GitHub ersetzt die alten Dateien dadurch.
+5. Unten "Commit changes". Danach startet GitHub von selbst einen Lauf (Reiter "Actions").
+6. EINMALIG bei diesem Update: Die Workflow-Datei muss ersetzt werden, damit der Handy-Knopf funktioniert.
+   a) Öffne im Repository ".github" > "workflows" > "main.yml" (im Hauptverzeichnis, NICHT im Unterordner).
+   b) Stift-Symbol ("Edit this file") anklicken.
+   c) Alles markieren und löschen, dann den kompletten Inhalt der Datei "main-yml-fuer-GitHub.txt" einfügen
+      (liegt im entpackten Ordner; mit dem Editor öffnen, Strg+A, Strg+C).
+   d) "Commit changes" > "Commit changes".
+7. Warte, bis unter "Actions" der neueste Lauf grün ist (ca. 5 Minuten).
+8. Öffne die Seite am Handy. Unter "Mehr" > "Aktualisieren" steht unten die App-Version: "v6 · 11.10.2026".
+   Steht dort noch etwas anderes, lade die Seite neu (Safari: Seite lange nach unten ziehen) oder lösche das
+   Symbol vom Home-Bildschirm und leg es neu an.
+
+Spätere Updates: nur Schritte 1 bis 5 (und 7, 8). Die Workflow-Datei musst du dann nicht wieder ändern,
+außer ich sage es dir.
+
+
+TEIL B: Vom Handy aus aktualisieren (einmalig einrichten, ca. 3 Minuten)
+------------------------------------------------------------------------
+Mit diesem Zugang löst die App selbst einen neuen Abruf bei GitHub aus. Danach brauchst du keinen PC mehr.
+
+1. Öffne am Handy in Safari: github.com/settings/personal-access-tokens/new  (bei GitHub angemeldet).
+2. Token name: Wishlist App.  Expiration: 1 year (oder länger, wenn angeboten).
+3. "Repository access": "Only select repositories" > dein Wishlist-Repository auswählen.
+4. "Permissions" > "Repository permissions" > "Actions" auf "Read and write" stellen.
+5. Ganz unten "Generate token". Den Schlüssel (beginnt mit github_pat_) kopieren.
+6. In der App: oben rechts auf den Pfeil-Kreis tippen (Aktualisieren) > "Zugang einrichten".
+   Schlüssel einfügen, Workflow-Datei lassen (main.yml), "Speichern".
+7. Fertig. Ab jetzt: Aktualisieren > "Jetzt abrufen". Nach etwa 1 bis 2 Minuten lädt die App die neuen Daten selbst.
+
+Sicherheit: Der Schlüssel darf nur dieses eine Repository und nur "Actions" bedienen. Er liegt nur im Speicher
+der App auf deinem Gerät. Wenn du ihn nicht mehr willst: In der App "Schlüssel löschen" und bei GitHub unter
+Settings > Developer settings > Personal access tokens löschen.
+
+Ohne diesen Zugang geht es auch: GitHub holt die Daten ohnehin alle 6 Stunden von allein.
+Per Hand (Handy, Safari, Desktop-Ansicht der Seite): github.com > dein Repository > Actions > "Update und
+Veröffentlichen" > "Run workflow".
+
+
+TEIL C: So benutzt du die App
+-----------------------------
+- Unten die Leiste: Start, Wunschliste, Empfehlung, Mods, Mehr.
+- "Mehr": Katalog (alle TSW7-DLC zum Abhaken), Analyse, Vergleich, Rankings, Preise, Einstellungen, Regler.
+- "Regler" (schwebender Knopf): Gewichtung der Kriterien; die Rangfolge rechnet sofort neu.
+- DLC-Besitz: Steam bietet dafür keine Abfrage. Hake deine DLC im Katalog ab ("Besitze ich").
+  Gekaufte Spiele erkennt die App selbst, wenn der Steam-Schlüssel bei GitHub hinterlegt ist.
+- Empfehlung und Mod-Assistent sind regelbasiert, KEINE KI.
+- Haken und Regler bleiben auf dem Gerät. Haken aus Safari musst du in der App vom Home-Bildschirm einmal neu setzen.
+
+
+TEIL D: Wenn etwas nicht klappt
+-------------------------------
+- Lauf unter "Actions" ist rot: Lauf anklicken > "build" > roten Schritt öffnen, Meldung notieren.
+- "Failed to create deployment (404)": Settings > Pages > Source auf "GitHub Actions" stellen, Lauf neu starten.
+- App meldet "Der Zugangsschlüssel ist ungültig": Neuen Schlüssel erstellen (Teil B).
+- App meldet "Dem Schlüssel fehlt die Berechtigung": Beim Erstellen "Actions: Read and write" einstellen.
+- App meldet "Workflow oder Repository nicht gefunden": In "Zugang einrichten" den Dateinamen prüfen (main.yml).
+- "GitHub lehnt den Start ab": Die Datei main.yml im Hauptverzeichnis wurde noch nicht ersetzt (Teil A, Schritt 6).
+- Wunschliste leer: In Steam muss das Profil und "Spieldetails" auf "Öffentlich" stehen. Das Antwortformat der
+  Steam-Wunschlisten-Schnittstelle konnte nicht vorab gegen das echte Steam getestet werden.
+- Nach 60 Tagen ohne Aktivität kann GitHub den Zeitplan pausieren: Actions > Workflow > "Enable workflow".
+
+
+TEIL E: Erste Einrichtung (nur wenn du alles neu aufsetzt)
+-----------------------------------------------------------
+1. github.com: Konto anlegen, "New repository", Name z. B. wl-7k3q, "Public", Create.
+2. Den ganzen Ordner "steam-wishlist-github" auf "uploading an existing file" ziehen, Commit.
+3. Actions > "set up a workflow yourself": Inhalt von main-yml-fuer-GitHub.txt einfügen, Commit.
+4. Settings > Secrets and variables > Actions > New repository secret: Name STEAM_API_KEY, Wert = Steam-Schlüssel
+   (steamcommunity.com/dev/apikey, Domain: localhost).
+5. Settings > Pages > Source: GitHub Actions.
+6. Actions > "Update und Veröffentlichen" > Run workflow.
+7. Adresse unter Settings > Pages. Am iPhone in Safari öffnen > Teilen > "Zum Home-Bildschirm".

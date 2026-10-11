@@ -1,0 +1,56 @@
+name: Update und Veröffentlichen
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 */6 * * *"   # etwa alle 6 Stunden
+  workflow_dispatch:
+    inputs:
+      quick:
+        description: "Schnell (Mod-Seiten nicht neu lesen)"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Daten von Steam und trainsimcommunity.com holen
+        env:
+          STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
+          DATA_DIR: ${{ github.workspace }}/steam-wishlist-github/docs/data
+        run: node steam-wishlist-github/server.mjs --once ${{ github.event.inputs.quick == 'true' && '--quick' || '' }}
+      - name: Stand im Projekt speichern (Preisverlauf bleibt erhalten)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@users.noreply.github.com"
+          git add steam-wishlist-github/docs/data
+          git diff --cached --quiet || git commit -m "Daten aktualisiert"
+          git push
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: steam-wishlist-github/docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
