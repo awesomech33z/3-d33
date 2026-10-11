@@ -1,0 +1,68 @@
+STEAM WISHLIST ANALYZER – iPhone-App über GitHub (kostenlos, PC muss nicht laufen)
+===============================================================================
+
+Was du am Ende hast
+- Eine Seite im Internet, die du auf dem iPhone wie eine App auf den Home-Bildschirm legst.
+- GitHub holt etwa alle 6 Stunden automatisch deine Wunschliste, die Preise und deinen Besitz von Steam
+  und die Mod-Liste von trainsimcommunity.com. Dein PC muss dafür nicht an sein.
+- Empfehlung des nächsten DLC und Mod-Assistent arbeiten in der Seite (regelbasiert, KEINE KI).
+
+WICHTIG ZUR PRIVATSPHÄRE
+- Die Seite ist öffentlich erreichbar (private Seiten kosten bei GitHub Geld). Wer die Adresse kennt, sieht
+  deine Wunschliste, deine Spieleliste und die Preisdaten. Deine Wunschliste und Spieleliste sind auf Steam
+  bei öffentlichem Profil ohnehin sichtbar.
+- Dein Steam-Schlüssel ist NICHT öffentlich: Er liegt als "Secret" bei GitHub und steht in keiner Datei.
+- Wähle einen Repository-Namen, den man nicht errät (z. B. "wl-7k3q").
+
+TEIL 1: Konto und Projekt
+1. Geh auf https://github.com und klick "Sign up". Konto mit E-Mail anlegen (gratis).
+2. Oben rechts auf das "+" und "New repository" klicken.
+   - Repository name: z. B. wl-7k3q
+   - "Public" auswählen
+   - unten "Create repository" klicken.
+3. Entpacke diese ZIP-Datei auf dem PC. Es entsteht ein Ordner mit docs, data, .github, server.mjs ...
+4. Auf der Seite deines neuen Repositories den Link "uploading an existing file" anklicken.
+5. Öffne den entpackten Ordner, markiere ALLES (Strg+A) und ziehe es in das GitHub-Fenster.
+   Warte, bis alle Dateien (auch die Ordner) aufgelistet sind. Unten "Commit changes" klicken.
+   - Falls der Ordner ".github" fehlt: siehe "Falls .github fehlt" ganz unten.
+
+TEIL 2: Steam-Schlüssel eintragen
+6. Hol dir den Schlüssel auf https://steamcommunity.com/dev/apikey (Domain: localhost). Nicht weitergeben!
+7. In deinem Repository oben auf "Settings", links "Secrets and variables" > "Actions".
+8. "New repository secret". Name: STEAM_API_KEY  (genau so, in Großbuchstaben). Secret: dein Schlüssel. "Add secret".
+9. In Steam muss unter Profil > Datenschutzeinstellungen "Spieldetails" auf "Öffentlich" stehen.
+
+TEIL 3: Seite einschalten
+10. Settings > links "Pages". Bei "Source" (Build and deployment) "GitHub Actions" auswählen.
+11. Oben auf "Actions". Falls GitHub fragt, ob Workflows aktiviert werden sollen: "I understand ..." bestätigen.
+12. Links "Update und Veröffentlichen" wählen, rechts "Run workflow" > "Run workflow".
+13. Nach etwa 2 bis 5 Minuten sind beide Schritte grün (Häkchen). Die Adresse deiner Seite steht unter
+    Settings > Pages ("Your site is live at ...") und sieht so aus: https://DEINNAME.github.io/wl-7k3q/
+
+TEIL 4: Aufs iPhone
+14. Öffne die Adresse in SAFARI (nicht in einem anderen Browser).
+15. Teilen-Symbol (Quadrat mit Pfeil) > "Zum Home-Bildschirm" > "Hinzufügen".
+16. Ab jetzt öffnest du die App über das Symbol. Der Knopf "Aktualisieren" lädt den neuesten Stand.
+    Deine Haken ("Besitze ich") und Regler bleiben in der App auf dem iPhone gespeichert.
+    Haken, die du vorher in Safari gesetzt hast, musst du in der App einmal neu setzen.
+
+Wie es weiterläuft
+- GitHub aktualisiert alles automatisch etwa alle 6 Stunden. Der Preisverlauf wächst dabei mit.
+- Wird in 60 Tagen am Projekt nichts getan, kann GitHub den Zeitplan anhalten. Dann unter "Actions"
+  den Zeitplan wieder einschalten (Knopf "Enable workflow").
+
+Ehrliche Grenzen
+- DLC-Besitz: Steam bietet dafür keine offizielle Abfrage. Die Spieleliste zeigt nur Spiele, keine DLC.
+  Hake deine DLC im Katalog ab. Optional: Unter Aktualisieren > "DLC-Besitz einlesen" den Text von
+  https://store.steampowered.com/dynamicstore/userdata/ einfügen (im Browser eingeloggt öffnen).
+- Das Antwortformat der Steam-Wunschlisten-Schnittstelle und das Lesen der Mod-Seiten konnten nicht gegen
+  das echte Steam bzw. die echte Mod-Seite getestet werden. Schau nach dem ersten Lauf unter
+  Actions > (letzter Lauf) > "build" > "Daten von Steam ... holen": Dort stehen die Meldungen im Klartext
+  (ohne Schlüssel). Schick sie mir, falls etwas nicht stimmt.
+- Die Daten sind so aktuell wie der letzte Lauf (bis zu 6 Stunden alt).
+
+Falls .github fehlt (Workflow-Datei von Hand anlegen)
+- Im Repository "Add file" > "Create new file". Als Name genau eintippen:  .github/workflows/update.yml
+  (beim Tippen des Schrägstrichs entstehen die Ordner automatisch).
+- Den Inhalt der Datei update.yml aus dem entpackten Ordner (.github/workflows) hineinkopieren,
+  "Commit changes" klicken.

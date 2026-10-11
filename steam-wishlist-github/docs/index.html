@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wishlist Analyzer</title>
+<meta name="theme-color" content="#0b1522">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wishlist">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: Seitenleiste links (Navigation + Regler, immer sichtbar), rechts eine Inhaltsspalte.
+   Schmal: feste Kopfzeile mit Tabs, Regler als Schublade von unten. Dark-first, Fahrplantafel als Leitmotiv. */
+:root{
+  --bg:#0b121a; --s1:#121c28; --s2:#192636; --line:#253549; --fg:#e6edf5; --mu:#8fa4b9;
+  --ac:#2ea8ff; --acink:#04121f; --good:#52c47d; --warn:#f2b544; --bad:#f47272;
+  --board:#05080c; --boardfg:#ffc94a; --boardmu:#a58a3c;
+  --f-d:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-b:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-m:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    --bg:#edf1f6; --s1:#ffffff; --s2:#f1f5f9; --line:#d3dce7; --fg:#0f1a26; --mu:#546a80;
+    --ac:#0a78cc; --acink:#ffffff; --good:#1c8a4b; --warn:#9a6200; --bad:#c13a3a;
+    --board:#10161d; --boardfg:#ffc94a; --boardmu:#b59a4a; color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#edf1f6; --s1:#ffffff; --s2:#f1f5f9; --line:#d3dce7; --fg:#0f1a26; --mu:#546a80;
+  --ac:#0a78cc; --acink:#ffffff; --good:#1c8a4b; --warn:#9a6200; --bad:#c13a3a;
+  --board:#10161d; --boardfg:#ffc94a; --boardmu:#b59a4a; color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 var(--f-b);margin:0;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-d);font-weight:600;letter-spacing:.01em;margin:0;text-wrap:balance}
+h1{font-size:2rem;line-height:1.1}
+h2{font-size:1.35rem;line-height:1.15}
+h3{font-size:1.05rem}
+p{margin:0}
+a{color:var(--ac)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.num{font-family:var(--f-m);font-variant-numeric:tabular-nums}
+.mu{color:var(--mu)}
+.sm{font-size:.82rem}
+
+.app{display:grid;grid-template-columns:minmax(0,1fr);min-height:100%}
+.side{background:var(--s1);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.brand{display:flex;align-items:baseline;gap:.6rem;padding:10px 16px 4px}
+.brand b{font-family:var(--f-d);font-size:1.35rem;font-weight:700;letter-spacing:.02em}
+.brand span{font-family:var(--f-m);font-size:.7rem;color:var(--mu)}
+#nav{display:flex;gap:4px;overflow-x:auto;padding:4px 12px 10px;scrollbar-width:none}
+#nav::-webkit-scrollbar{display:none}
+#nav button{flex:none;display:flex;align-items:center;gap:.45rem;background:none;border:1px solid transparent;color:var(--mu);padding:7px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+#nav button:hover{color:var(--fg)}
+#nav button[aria-current="page"]{background:var(--s2);color:var(--fg);border-color:var(--line);box-shadow:inset 3px 0 0 var(--ac)}
+#nav .cnt{font-family:var(--f-m);font-size:.72rem;color:var(--mu)}
+.wp{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--s1);border-top:1px solid var(--line);border-radius:14px 14px 0 0;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));max-height:78%;overflow:auto;transform:translateY(105%);transition:transform .22s ease;box-shadow:0 -12px 40px #0008}
+.wp.open{transform:none}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--ac);color:var(--acink);border:0;border-radius:99px;padding:10px 18px;font-weight:600;cursor:pointer;box-shadow:0 6px 24px #0007}
+main{min-width:0;padding:16px 16px 96px}
+.mhead{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;justify-content:space-between;margin-bottom:16px}
+.mhead .stand{font-family:var(--f-m);font-size:.74rem;color:var(--mu)}
+@media (min-width:960px){
+  .app{grid-template-columns:292px minmax(0,1fr)}
+  .side{position:sticky;top:0;height:100vh;height:100dvh;overflow:auto;border-bottom:0;border-right:1px solid var(--line);display:flex;flex-direction:column}
+  .brand{padding:18px 18px 10px}
+  #nav{flex-direction:column;overflow:visible;padding:4px 10px 12px}
+  #nav button{justify-content:space-between}
+  .wp{position:static;transform:none;max-height:none;border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none;padding:16px 18px 24px;overflow:visible}
+  .fab,.wp .x{display:none}
+  main{padding:24px 28px 56px;max-width:1180px;width:100%}
+}
+
+.card{background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.card.flat{background:var(--s2)}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr))}
+.grid.kpi{grid-template-columns:repeat(auto-fit,minmax(min(100%,10.5rem),1fr))}
+.grid.sm3{grid-template-columns:repeat(auto-fill,minmax(min(100%,13rem),1fr))}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.row.sp{justify-content:space-between}
+.sec{display:flex;flex-direction:column;gap:10px;margin-top:26px}
+.sec>h2{display:flex;align-items:baseline;gap:.6rem}
+.sec>h2 small{font:400 .75rem var(--f-m);color:var(--mu)}
+.btn{background:var(--ac);color:var(--acink);border:0;border-radius:8px;padding:7px 12px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;line-height:1.2}
+.btn:hover{filter:brightness(1.1)}
+.btn.g{background:var(--s2);color:var(--fg);border:1px solid var(--line);font-weight:500}
+.btn.g:hover{border-color:var(--mu)}
+.btn.on{background:var(--ac);color:var(--acink);border-color:var(--ac)}
+.btn.sm{padding:4px 9px;font-size:.8rem}
+.pill{display:inline-flex;align-items:center;gap:.3rem;padding:1px 9px;border-radius:99px;font-size:.74rem;font-family:var(--f-m);background:var(--s2);border:1px solid var(--line);color:var(--mu);white-space:nowrap}
+.pill.good{color:var(--good);border-color:var(--good)}
+.pill.warn{color:var(--warn);border-color:var(--warn)}
+.pill.bad{color:var(--bad);border-color:var(--bad)}
+.pill.ac{color:var(--ac);border-color:var(--ac)}
+input[type=text],input[type=number],input[type=search],select,textarea{background:var(--s2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-width:0;max-width:100%}
+input[type=range]{accent-color:var(--ac);width:100%;min-width:0}
+input[type=checkbox]{accent-color:var(--ac);width:17px;height:17px}
+textarea{width:100%;resize:vertical}
+
+/* Fahrplantafel */
+.board{background:var(--board);color:var(--boardfg);border-radius:12px;padding:12px 16px;font-family:var(--f-m);border:1px solid #000}
+.board .bh{display:flex;justify-content:space-between;gap:10px;font-size:.7rem;letter-spacing:.14em;color:var(--boardmu);padding-bottom:8px;border-bottom:1px solid #ffffff1a;text-transform:uppercase}
+.board .br{display:grid;grid-template-columns:5.2rem minmax(0,1fr) auto;gap:4px 14px;padding:8px 0;border-bottom:1px solid #ffffff10;align-items:baseline}
+.board .br:last-child{border-bottom:0;padding-bottom:0}
+.board .br b{font-weight:500;font-size:1.05rem}
+.board .br .n{overflow-wrap:anywhere}
+.board .br.dim{color:var(--boardmu)}
+.board .br .d{text-align:right;white-space:nowrap}
+@media (max-width:520px){.board .br{grid-template-columns:4.4rem minmax(0,1fr)}.board .br .d{grid-column:2;text-align:left}}
+
+/* Regler */
+.wp h3{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.wp .x{background:none;border:0;color:var(--mu);font-size:1.3rem;cursor:pointer;line-height:1}
+.sl{display:grid;grid-template-columns:minmax(0,1fr) 2.6rem;gap:0 8px;align-items:center;margin:7px 0}
+.sl label{grid-column:1/-1;font-size:.82rem;color:var(--mu);display:flex;justify-content:space-between;gap:8px}
+.sl .v{font-family:var(--f-m);font-size:.8rem;text-align:right}
+.wp .best{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+.wp .best .it{display:flex;justify-content:space-between;gap:8px;align-items:baseline;padding:6px 8px;border-radius:8px;background:var(--s2);cursor:pointer;border:0;text-align:left;width:100%}
+.wp .best .it:hover{outline:1px solid var(--ac)}
+.wp .best .it span:first-child{min-width:0;overflow-wrap:anywhere}
+.lbl{font-family:var(--f-m);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mu)}
+
+/* Karten */
+.gc{display:flex;flex-direction:column;gap:10px}
+.gc .top{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:10px;align-items:start}
+.tile{width:52px;height:52px;border-radius:10px;display:grid;place-items:center;color:#fff;font:700 1.15rem var(--f-d);letter-spacing:.03em}
+.gc .ti{font-weight:600;line-height:1.25;overflow-wrap:anywhere}
+.price{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.price .now{font:500 1.2rem var(--f-m)}
+.price s{color:var(--mu);font:.85rem var(--f-m)}
+.ring{--s:0;width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--ac) calc(var(--s)*1%),var(--line) 0);display:grid;place-items:center;flex:none}
+.ring i{font:600 1.05rem var(--f-d);font-style:normal;width:40px;height:40px;border-radius:50%;background:var(--s1);display:grid;place-items:center}
+.ring.lg{width:92px;height:92px}.ring.lg i{width:74px;height:74px;font-size:2rem}
+.ring.na{background:var(--line)}
+.ring.na i{color:var(--mu)}
+
+/* Tabellen */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--s1)}
+table{border-collapse:collapse;width:100%}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .7rem var(--f-m);letter-spacing:.1em;text-transform:uppercase;color:var(--mu);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.win{background:color-mix(in srgb,var(--good) 16%,transparent);font-weight:600}
+td.nw{white-space:nowrap}
+
+/* Katalog */
+.cat{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--s1)}
+.cr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line)}
+.cr:last-child{border-bottom:0}
+.cr.owned .tt{color:var(--mu);text-decoration:line-through}
+.cr .tt{overflow-wrap:anywhere;cursor:pointer;background:none;border:0;text-align:left;padding:0;font-weight:500}
+.cr .tt:hover{color:var(--ac)}
+.cr .pr{text-align:right;white-space:nowrap}
+.cr .ac2{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+@media (min-width:760px){.cr{grid-template-columns:auto minmax(0,1fr) 11rem auto}.cr .ac2{grid-column:auto}}
+
+/* Analyse */
+.crit{display:grid;grid-template-columns:minmax(0,1fr);gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.crit:last-child{border-bottom:0}
+.crit .h{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.crit .ctl{display:grid;grid-template-columns:minmax(0,1fr) 3.4rem auto;gap:8px;align-items:center}
+.ev{white-space:pre-wrap;overflow-wrap:anywhere}
+.chartbox{width:100%;overflow:hidden}
+.chartbox svg{width:100%;height:auto;display:block}
+.chartbox .ax{stroke:var(--line);stroke-width:1}
+.chartbox .gl{stroke:var(--line);stroke-width:1;stroke-dasharray:2 4}
+.chartbox text{fill:var(--mu);font:11px var(--f-m)}
+.chartbox .bandS{fill:color-mix(in srgb,var(--ac) 18%,transparent)}
+.chartbox .bandF{fill:color-mix(in srgb,var(--mu) 12%,transparent)}
+.chartbox .bandN{fill:color-mix(in srgb,var(--warn) 20%,transparent)}
+.chartbox text.halo{fill:var(--fg);paint-order:stroke;stroke:var(--s1);stroke-width:4px;stroke-linejoin:round;font-size:12px}
+.chartbox .ln{fill:none;stroke:var(--ac);stroke-width:2.5}
+.chartbox .ln.d{stroke-dasharray:5 5;stroke:var(--mu);stroke-width:2}
+.chartbox .pt{fill:var(--ac);stroke:var(--bg);stroke-width:2}
+.chartbox .pt.h{fill:var(--bg);stroke:var(--mu);stroke-width:2}
+.chartbox .tg{stroke:var(--good);stroke-width:1.5;stroke-dasharray:6 4}
+.chartbox .today{stroke:var(--warn);stroke-width:1.5}
+.chartbox .pe{stroke:var(--bad);stroke-width:1.5;stroke-dasharray:2 3}
+.chartbox text.t-w{fill:var(--warn)}.chartbox text.t-g{fill:var(--good)}.chartbox text.t-b{fill:var(--bad)}.chartbox text.t-a{fill:var(--ac)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.78rem;color:var(--mu)}
+.legend i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+/* Sheet */
+.shade{position:fixed;inset:0;background:#000b;z-index:60;display:flex;justify-content:center;align-items:flex-start;overflow:auto;padding:max(16px,env(safe-area-inset-top,0px)) 16px 24px}
+.shade[hidden]{display:none}
+.sheet{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:18px;width:100%;max-width:680px;margin-block:auto}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--s2);border:1px solid var(--line);padding:8px 14px;border-radius:99px;z-index:70;font-size:.85rem;max-width:90%}
+.toast[hidden]{display:none}
+@media (min-width:960px){.toast{bottom:24px}}
+/* Lokale App */
+.jobbar{position:fixed;right:16px;top:calc(12px + env(safe-area-inset-top,0px));z-index:65;background:var(--s2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;max-width:min(92vw,22rem);box-shadow:0 8px 30px #0006}
+.jobbar[hidden]{display:none}
+.jobbar .bar{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:6px}
+.jobbar .bar i{display:block;height:100%;background:var(--ac);transition:width .3s}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden;align-self:center}
+.bar i{display:block;height:100%;background:var(--ac)}
+.chat{display:flex;flex-direction:column;gap:12px}
+.msg{display:flex;flex-direction:column;gap:4px;max-width:100%;min-width:0}
+.msg.me{align-self:flex-end;background:var(--s2);border:1px solid var(--line);border-radius:12px 12px 2px 12px;padding:8px 12px;max-width:min(100%,34rem)}
+.msg.bot{background:var(--s1);border:1px solid var(--line);border-radius:12px 12px 12px 2px;padding:10px 14px}
+code{font-family:var(--f-m);font-size:.85em;background:var(--s2);padding:1px 5px;border-radius:5px}
+summary{cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand"><b>Wishlist Analyzer</b><span>TSW7</span></div>
+    <nav id="nav" aria-label="Hauptnavigation"></nav>
+    <section id="wp" class="wp" aria-label="Regler"></section>
+  </aside>
+  <main id="main"></main>
+</div>
+<button id="fab" class="fab" type="button" data-act="wp">Regler</button>
+<div id="shade" class="shade" hidden><div id="sheet" class="sheet" role="dialog" aria-modal="true"></div></div>
+<div id="toast" class="toast" role="status" hidden></div>
+<div id="jobbar" class="jobbar" role="status" hidden></div>
+
+<script>
+const ASOF='2026-10-09';
+const BASE=[{"id":4680530,"t":"Tadami Line: Aizu-Wakamatsu - Tadami Route Add-On","pre":"TSW7","d":"2026-09-29","ty":"route","rev":"Mostly Negative 26% of the 45 user reviews for this game are positive.","h":[{"d":"2026-09-29","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":35.99,"o":35.99,"k":"obs"}]},{"id":4714910,"t":"Tri-Rail GP49H-3 Loco Add-On","pre":"TSW7","d":"2026-09-15","ty":"other","rev":"","h":[{"d":"2026-09-15","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":15.99,"o":15.99,"k":"obs"}]},{"id":4714930,"t":"DB BR 412 ICE 4 High Speed EMU Add-On","pre":"TSW7","d":"2026-09-15","ty":"other","rev":"Mixed 46% of the 15 user reviews for this game are positive.","h":[{"d":"2026-09-15","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":17.99,"o":17.99,"k":"obs"}],"wish":1},{"id":4714920,"t":"Northern BR Class 333 EMU Add-On","pre":"TSW7","d":"2026-09-15","ty":"other","rev":"","h":[{"d":"2026-09-15","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":17.99,"o":17.99,"k":"obs"}]},{"id":4680810,"t":"Florida Tri-Rail: Miami - Boca Raton Route Add-On","pre":"TSW7","d":"2026-09-15","ty":"route","rev":"","h":[{"d":"2026-09-15","p":39.99,"o":39.99,"k":"list"},{"d":"2026-10-09","p":39.99,"o":39.99,"k":"obs"}]},{"id":4680800,"t":"Bahnstrecke Nürnberg - Würzburg Route Add-On","pre":"TSW7","d":"2026-09-15","ty":"route","rev":"","h":[{"d":"2026-09-15","p":39.99,"o":39.99,"k":"list"},{"d":"2026-10-09","p":39.99,"o":39.99,"k":"obs"}]},{"id":4714890,"t":"Airedale & Wharfedale Network: Leeds & Bradford - Skipton & Ilkley Route Add-On","pre":"TSW7","d":"2026-09-15","ty":"route","rev":"","h":[{"d":"2026-09-15","p":39.99,"o":39.99,"k":"list"},{"d":"2026-10-09","p":39.99,"o":39.99,"k":"obs"}]},{"id":4679240,"t":"London Underground 1938 Stock EMU Add-On","pre":"TSW7","d":"2026-08-26","ty":"other","rev":"","h":[{"d":"2026-08-26","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":4.19,"o":13.99,"k":"obs"}]},{"id":4679270,"t":"Northeast Corridor: Boston - Providence Route Add-On","pre":"TSW7","d":"2026-08-26","ty":"route","rev":"","h":[{"d":"2026-08-26","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":7.49,"o":29.99,"k":"obs"}]},{"id":4680360,"t":"DB BR 294 Diesel Shunter Add-On","pre":"TSW7","d":"2026-08-26","ty":"other","rev":"","h":[{"d":"2026-08-26","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":10.39,"o":15.99,"k":"obs"}]},{"id":4680370,"t":"CrossCountry BR Class 220 Voyager DEMU Add-On","pre":"TSW7","d":"2026-08-26","ty":"other","rev":"","h":[{"d":"2026-08-26","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":10.39,"o":15.99,"k":"obs"}]},{"id":4680350,"t":"NJ TRANSIT ALP-45DP Loco Add-On","pre":"TSW7","d":"2026-08-26","ty":"other","rev":"","h":[{"d":"2026-08-26","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":10.39,"o":15.99,"k":"obs"}]},{"id":4680330,"t":"Bahnstrecke Leipzig - Dresden Route Add-On","pre":"TSW7","d":"2026-08-26","ty":"route","rev":"","h":[{"d":"2026-08-26","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":35.99,"o":35.99,"k":"obs"}]},{"id":4680320,"t":"Morristown Line: New York & Hoboken - Dover Route Add-On","pre":"TSW7","d":"2026-08-26","ty":"route","rev":"","h":[{"d":"2026-08-26","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":35.99,"o":35.99,"k":"obs"}]},{"id":4680340,"t":"Riviera Line: Exeter – Plymouth & Paignton Route Add-On","pre":"TSW7","d":"2026-08-26","ty":"route","rev":"","h":[{"d":"2026-08-26","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":35.99,"o":35.99,"k":"obs"}]},{"id":4679860,"t":"Norfolk Southern Heritage Livery Collection Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":5.99,"o":11.99,"k":"obs"}]},{"id":4679830,"t":"Antelope Valley Line: Los Angeles - Lancaster Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4679840,"t":"East Coast Main Line: Peterborough - Doncaster Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":35.99,"k":"obs"}]},{"id":4679810,"t":"Glossop Line: Manchester - Hadfield & Glossop Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":22.99,"o":22.99,"k":"list"},{"d":"2026-10-09","p":9.19,"o":22.99,"k":"obs"}]},{"id":4679760,"t":"Rail Operations Group BR Class 37/7 Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":1.79,"o":5.99,"k":"obs"}]},{"id":4679850,"t":"S-Bahn Vorarlberg: Lindau - Bludenz Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":12.59,"o":35.99,"k":"obs"}]},{"id":4679780,"t":"DB BR 403 ICE 3 Railbow Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":1.79,"o":5.99,"k":"obs"}]},{"id":4679800,"t":"Railpool BR 193 Vectron Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":6.39,"o":15.99,"k":"obs"}]},{"id":4679750,"t":"BNSF SD70ACe Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":2.39,"o":5.99,"k":"obs"}]},{"id":4679820,"t":"LNER Class A3 60103 Flying Scotsman Steam Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":6.39,"o":15.99,"k":"obs"}]},{"id":4679740,"t":"Midland Main Line: Leicester - Derby & Nottingham Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4679720,"t":"Linke Rheinstrecke: Mainz - Koblenz Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":7.19,"o":35.99,"k":"obs"}]},{"id":4679870,"t":"Maintalbahn: Aschaffenburg - Miltenberg Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4679670,"t":"Peak Forest Railway: Ambergate - Chinley & Buxton Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4679690,"t":"Blackpool Branches: Preston - Blackpool & Ormskirk Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":10.43,"o":35.99,"k":"obs"}]},{"id":4679660,"t":"Northeast Corridor: New York - Trenton","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4679890,"t":"RhB Arosa Aggregates Pack","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":3.59,"o":11.99,"k":"obs"}]},{"id":4679970,"t":"Edinburgh - Glasgow: Engineering Express Pack","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":3.59,"o":11.99,"k":"obs"}]},{"id":4679640,"t":"Thameslink BR Class 700/0 EMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":6.39,"o":15.99,"k":"obs"}]},{"id":4679630,"t":"Amtrak's Acela","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":7.19,"o":17.99,"k":"obs"}]},{"id":4679950,"t":"Cargo Line Vol. 1 - Petroleum","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":5.99,"o":11.99,"k":"obs"}]},{"id":4679620,"t":"West Cornwall Steam Railtour Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":3.59,"o":11.99,"k":"obs"}]},{"id":4679960,"t":"Centro Regional Railways BR Class 323 Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":3.59,"o":5.99,"k":"obs"}]},{"id":4679610,"t":"ScotRail Express: Edinburgh - Glasgow Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":10.79,"o":35.99,"k":"obs"}]},{"id":4679980,"t":"Berninalinie: Tirano - Ospizio Bernina Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":10.79,"o":35.99,"k":"obs"}]},{"id":4679600,"t":"The Holiday Express - Runaway Elf","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":9.99,"o":9.99,"k":"list"},{"d":"2026-10-09","p":2.99,"o":9.99,"k":"obs"}]},{"id":4679990,"t":"LIRR Commuter: New York - Long Beach, Hempstead & Hicksville Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":35.99,"k":"obs"}]},{"id":4679580,"t":"New Journeys - S-Bahn Köln BR 423 Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":3.59,"o":3.59,"k":"list"},{"d":"2026-10-09","p":1.43,"o":3.59,"k":"obs"}]},{"id":4679570,"t":"New Journeys - CSX SD40 Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":3.59,"o":3.59,"k":"list"},{"d":"2026-10-09","p":1.43,"o":3.59,"k":"obs"}]},{"id":4680000,"t":"Bahnstrecke Salzburg - Rosenheim Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"4 Nutzerreviews","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":35.99,"k":"obs"}],"wish":1},{"id":4679560,"t":"New Journeys - Silver 1972 Stock Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":3.59,"o":3.59,"k":"list"},{"d":"2026-10-09","p":1.43,"o":3.59,"k":"obs"}]},{"id":4680010,"t":"London Overground Suffragette line: Gospel Oak - Barking Riverside Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":5.99,"o":29.99,"k":"obs"}]},{"id":4679550,"t":"Bahnstrecke Bremen - Oldenburg Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":10.79,"o":35.99,"k":"obs"}]},{"id":4680020,"t":"Cargo Line Vol. 2 - Aggregates","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":5.99,"o":11.99,"k":"obs"}]},{"id":4679540,"t":"Birmingham Cross-City Line: Lichfield - Bromsgrove & Redditch Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":10.79,"o":35.99,"k":"obs"}]},{"id":4680030,"t":"Fife Circle Line & Levenmouth Rail Link Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"1 Nutzerreview","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":10.79,"o":35.99,"k":"obs"}],"wish":1},{"id":4679530,"t":"Dispolok BR 182 Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":1.79,"o":5.99,"k":"obs"}]},{"id":4680070,"t":"Semmeringbahn: Wiener Neustadt - Mürzzuschlag Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4679520,"t":"Santa Fe F7 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":2.39,"o":5.99,"k":"obs"}]},{"id":4680110,"t":"ScotRail BR Class 380 EMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":4.79,"o":15.99,"k":"obs"}]},{"id":4679510,"t":"Rail Head Treatment Train Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":1.79,"o":5.99,"k":"obs"}]},{"id":4680090,"t":"DB BR 218 Diesel Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":11.69,"o":17.99,"k":"obs"}]},{"id":4680040,"t":"ScotRail BR Class 158 Sprinter DMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":7.99,"o":15.99,"k":"obs"}]},{"id":4680100,"t":"Expert DB BR 101 & IC Steuerwagen Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":23.39,"o":35.99,"k":"obs"}]},{"id":4680120,"t":"San Bernardino Line: Los Angeles - San Bernardino Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":35.99,"k":"obs"}]},{"id":4679440,"t":"Union Pacific Heritage Livery Collection","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":4.79,"o":11.99,"k":"obs"}]},{"id":4680140,"t":"Frankfurt - Fulda: Kinzigtalbahn Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4679430,"t":"Sand Patch Grade Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4680130,"t":"West Coast Main Line: London Euston - Milton Keynes Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":10.79,"o":35.99,"k":"obs"}]},{"id":4679420,"t":"Bakerloo Line Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4680150,"t":"Avanti West Coast BR Class 390 Pendolino EMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"Keine Reviews","h":[{"d":"2026-08-25","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":11.69,"o":17.99,"k":"obs"}],"wish":1},{"id":4680160,"t":"FlixTrain BR 193 Vectron Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":10.39,"o":15.99,"k":"obs"}]},{"id":4679410,"t":"Schnellfahrstrecke Köln - Aachen Remastered Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4679400,"t":"Niddertalbahn: Bad Vilbel - Stockheim Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":23.39,"o":35.99,"k":"obs"}]},{"id":4679370,"t":"Cajon Pass: Barstow - San Bernardino Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":35.99,"k":"obs"}]},{"id":4679390,"t":"Spirit of Steam: Liverpool Lime Street - Crewe Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4680080,"t":"West Coast Main Line: Preston - Carlisle Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":39.99,"o":39.99,"k":"list"},{"d":"2026-10-09","p":11.59,"o":39.99,"k":"obs"}]},{"id":4679380,"t":"Southeastern Highspeed: London St Pancras – Ashford Intl & Faversham Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4680170,"t":"Mittenwaldbahn: Innsbruck - Garmisch-Partenkirchen Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"1 Nutzerreview","h":[{"d":"2026-08-25","p":39.99,"o":39.99,"k":"list"},{"d":"2026-10-09","p":27.99,"o":39.99,"k":"obs"}],"wish":1},{"id":4679460,"t":"Island Line 2022: BR Class 484 EMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":5.39,"o":17.99,"k":"obs"}]},{"id":4680190,"t":"Pfälzische Ludwigsbahn: Mannheim - Kaiserslautern Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":35.99,"k":"obs"}]},{"id":4680240,"t":"Metrolink Holiday Train Pack","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":2.39,"o":5.99,"k":"obs"}]},{"id":4679350,"t":"Harlem Line: Grand Central Terminal - North White Plains Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4680250,"t":"HKA Bogie Hopper Wagon Pack","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":1.79,"o":5.99,"k":"obs"}]},{"id":4679340,"t":"S-Bahn Zentralschweiz: Luzern - Sursee Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":7.49,"o":24.99,"k":"obs"}]},{"id":4680270,"t":"DB BR 111 & n-Wagen Pack","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":2.39,"o":5.99,"k":"obs"}]},{"id":4679330,"t":"Tharandter Rampe: Dresden - Chemnitz Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":11.99,"o":29.99,"k":"obs"}]},{"id":4680290,"t":"Metrolink F59PHR Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":10.39,"o":15.99,"k":"obs"}]},{"id":4679320,"t":"RhB Anniversary Collection Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":3.59,"o":11.99,"k":"obs"}]},{"id":4680200,"t":"London Overground Mildmay line: Stratford - Willesden Junction Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":29.99,"o":29.99,"k":"obs"}]},{"id":4679310,"t":"DB G6 Diesel Shunter Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":6.99,"o":13.99,"k":"obs"}]},{"id":4680220,"t":"Cardiff City Network: Radur & Coryton – Penarth & Bae Caerdydd Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4680230,"t":"Thomas & Friends™ Visit the West Somerset Railway","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":9.99,"o":24.99,"k":"obs"}]},{"id":4679300,"t":"Sherman Hill: Cheyenne - Laramie Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4680280,"t":"Spoorlijn Zwolle - Groningen Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":39.99,"o":39.99,"k":"list"},{"d":"2026-10-09","p":15.99,"o":39.99,"k":"obs"}]},{"id":4679290,"t":"West Cornwall Local: Penzance - St Austell & St Ives Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4679280,"t":"Horseshoe Curve: Altoona - Johnstown & South Fork Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":11.99,"o":29.99,"k":"obs"}]},{"id":4680060,"t":"ECML Diesel Railtour Pack","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":6.99,"o":13.99,"k":"obs"}]},{"id":4680210,"t":"Cargo Line Vol. 3 - Intermodal","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":5.99,"o":11.99,"k":"obs"}]},{"id":4680300,"t":"Frankfurt S-Bahn: S1, S8 & S9 Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":10.79,"o":35.99,"k":"obs"}]},{"id":4679260,"t":"Brighton Main Line: London Victoria - Brighton Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4680310,"t":"Thomas & Friends™ 80th Anniversary Expansion","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":9.99,"o":9.99,"k":"list"},{"d":"2026-10-09","p":3.99,"o":9.99,"k":"obs"}]},{"id":4680390,"t":"Cargo Line Vol. 4 - Military","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":5.99,"o":11.99,"k":"obs"}]},{"id":4680420,"t":"BR 194 & E94 Railtour Pack","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":14.99,"o":24.99,"k":"obs"}]},{"id":4679230,"t":"Cathcart Circle Line: Glasgow - Neilston & Newton Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4680440,"t":"Manchester Airport Commuter: Manchester - Alderley Edge Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":23.99,"o":29.99,"k":"obs"}]},{"id":4679220,"t":"Hauptstrecke Hamburg - Lübeck Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":11.99,"o":29.99,"k":"obs"}]},{"id":4680460,"t":"MBTA Providence/Stoughton Line HSP46 Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":2.99,"o":5.99,"k":"obs"}]},{"id":4680180,"t":"MBTA Commuter: Boston - Framingham/Worcester Line Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":10.79,"o":35.99,"k":"obs"}]},{"id":4680410,"t":"BR Class 86/2 & Mk2F Coaches Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":12.24,"o":24.99,"k":"obs"}]},{"id":4679210,"t":"DB BR 101 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":4.19,"o":13.99,"k":"obs"}]},{"id":4679200,"t":"Clinchfield Railroad: Elkhorn - Dante Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4679190,"t":"Diesel Legends of the Great Western Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":5.39,"o":17.99,"k":"obs"}]},{"id":4679170,"t":"DB BR 187 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":6.99,"o":13.99,"k":"obs"}]},{"id":4680490,"t":"West Midlands Railway & CrossCountry BR Class 170 DMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":6.39,"o":15.99,"k":"obs"}]},{"id":4679160,"t":"Cane Creek: Thompson - Potash Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":11.99,"o":29.99,"k":"obs"}]},{"id":4680480,"t":"Expert DB BR 101 on Kassel - Würzburg Gameplay Pack","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":9.99,"o":9.99,"k":"list"},{"d":"2026-10-09","p":6.49,"o":9.99,"k":"obs"}]},{"id":4679150,"t":"Arosalinie: Chur - Arosa Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4679140,"t":"LGV Mediterranee: Marseille - Avignon Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":11.99,"o":29.99,"k":"obs"}]},{"id":4679130,"t":"CSX C40-8W Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":4.19,"o":13.99,"k":"obs"}]},{"id":4679360,"t":"Schnellfahrstrecke Kassel - Würzburg Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":35.99,"k":"obs"}]},{"id":4679120,"t":"Southern BR Class 313 EMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":5.59,"o":13.99,"k":"obs"}]},{"id":4679110,"t":"DB BR 363 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":4.89,"o":13.99,"k":"obs"}]},{"id":4680550,"t":"West Coast Main Line: Birmingham - Crewe Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":35.99,"o":35.99,"k":"obs"}]},{"id":4679100,"t":"Hauptstrecke Munchen - Augsburg Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":10.49,"o":29.99,"k":"obs"}]},{"id":4679090,"t":"Isle Of Wight: Ryde - Shanklin Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":22.99,"o":22.99,"k":"list"},{"d":"2026-10-09","p":6.89,"o":22.99,"k":"obs"}]},{"id":4680600,"t":"Santa Fe on Cajon Pass Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":17.99,"k":"obs"}]},{"id":4679080,"t":"BR Class 20 'Chopper' Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":5.59,"o":13.99,"k":"obs"}]},{"id":4680450,"t":"Cargo Line Vol. 5 - Nuclear","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":7.99,"o":15.99,"k":"obs"}]},{"id":4679070,"t":"LIRR M3 EMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":5.59,"o":13.99,"k":"obs"}]},{"id":4680630,"t":"Transport for Wales BR Class 142 Pacer DMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":10.71,"o":15.99,"k":"obs"}]},{"id":4679060,"t":"DB BR 204 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":4.19,"o":13.99,"k":"obs"}]},{"id":4679050,"t":"Hauptstrecke Rhein-Ruhr: Duisburg - Bochum Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":10.49,"o":29.99,"k":"obs"}]},{"id":4680680,"t":"Frankenbahn: Stuttgart - Heilbronn Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":21.59,"o":35.99,"k":"obs"}]},{"id":4680560,"t":"Avanti West Coast BR Class 805 Evero BMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":17.99,"o":17.99,"k":"obs"}]},{"id":4679030,"t":"Peninsula Corridor: MP15DC Switcher Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":5.59,"o":13.99,"k":"obs"}]},{"id":4680640,"t":"Southern BR Class 171 & BR Class 377/3 Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":7.99,"o":15.99,"k":"obs"}]},{"id":4679020,"t":"Canadian National Oakville Subdivision: Hamilton - Oakville Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":4.99,"o":24.99,"k":"obs"}]},{"id":4679010,"t":"Peninsula Corridor: MP36PH-3C Express Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":5.59,"o":13.99,"k":"obs"}]},{"id":4680500,"t":"Liberec - Stará Paka Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"Positive 80% of the 10 user reviews for this game are positive.","h":[{"d":"2026-08-25","p":39.99,"o":39.99,"k":"list"},{"d":"2026-10-09","p":25.99,"o":39.99,"k":"obs"}]},{"id":4680760,"t":"Great British Railways Class 802 BMU Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":5.99,"o":5.99,"k":"list"},{"d":"2026-10-09","p":4.49,"o":5.99,"k":"obs"}]},{"id":4679000,"t":"East Coastway Remastered: Brighton - Eastbourne & Seaford Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":11.99,"o":29.99,"k":"obs"}]},{"id":4680620,"t":"Expert DB BR 145 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":26.99,"o":35.99,"k":"obs"}]},{"id":4678980,"t":"BR Class 31 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":5.59,"o":13.99,"k":"obs"}]},{"id":4680690,"t":"Northeast Corridor Metro-North: New York - Stamford Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":39.99,"o":39.99,"k":"list"},{"d":"2026-10-09","p":27.99,"o":39.99,"k":"obs"}]},{"id":4678970,"t":"Rhein-Ruhr Osten: Wuppertal - Hagen Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4680660,"t":"Medway Valley Line: Strood - Tonbridge Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":28.79,"o":35.99,"k":"obs"}]},{"id":4678960,"t":"Peninsula Corridor: San Francisco - San Jose Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":7.49,"o":24.99,"k":"obs"}]},{"id":4680710,"t":"BR Class 90 Electric Freight Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":12.79,"o":15.99,"k":"obs"}]},{"id":4678940,"t":"Tees Valley Line: Darlington – Saltburn-by-the-Sea Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":9.99,"o":24.99,"k":"obs"}]},{"id":4680730,"t":"DB BR 147 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":11.69,"o":17.99,"k":"obs"}]},{"id":4678930,"t":"BR Heavy Freight Pack Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":4.89,"o":13.99,"k":"obs"}]},{"id":4680610,"t":"GWR HST Farewell Pack","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":12.79,"o":15.99,"k":"obs"}]},{"id":4678920,"t":"BR Class 52 'Western' Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":5.59,"o":13.99,"k":"obs"}]},{"id":4680670,"t":"West Coast Main Line Trent Valley: Milton Keynes - Crewe Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":39.99,"o":39.99,"k":"list"},{"d":"2026-10-09","p":39.99,"o":39.99,"k":"obs"}]},{"id":4678910,"t":"DB BR 155 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":4.19,"o":13.99,"k":"obs"}]},{"id":4680540,"t":"West Coast Main Line: Crewe - Preston Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":35.99,"o":35.99,"k":"obs"}]},{"id":4678900,"t":"DB BR 182 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":4.89,"o":13.99,"k":"obs"}]},{"id":4680740,"t":"BNSF GP60M & GP60B Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":15.99,"o":15.99,"k":"list"},{"d":"2026-10-09","p":11.19,"o":15.99,"k":"obs"}]},{"id":4678890,"t":"Main Spessart Bahn: Aschaffenburg - Gemünden Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":7.49,"o":24.99,"k":"obs"}]},{"id":4680770,"t":"Cargo Line Vol. 6 - Gas","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":11.99,"o":11.99,"k":"list"},{"d":"2026-10-09","p":9.59,"o":11.99,"k":"obs"}]},{"id":4678880,"t":"BR Class 33 Loco Add-On","pre":"TSW7","d":"2026-08-25","ty":"other","rev":"","h":[{"d":"2026-08-25","p":13.99,"o":13.99,"k":"list"},{"d":"2026-10-09","p":5.59,"o":13.99,"k":"obs"}]},{"id":4680750,"t":"Thames Valley: Windsor, Henley & Marlow Branches Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":17.99,"o":17.99,"k":"list"},{"d":"2026-10-09","p":14.39,"o":17.99,"k":"obs"}]},{"id":4678870,"t":"Northern Trans-Pennine: Manchester - Leeds Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":6.24,"o":24.99,"k":"obs"}]},{"id":4680590,"t":"Schnellfahrstrecke Nürnberg - Ingolstadt Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":35.99,"o":35.99,"k":"list"},{"d":"2026-10-09","p":26.99,"o":35.99,"k":"obs"}]},{"id":4678860,"t":"Long Island Rail Road: New York - Hicksville Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4678850,"t":"Ruhr-Sieg Nord: Hagen - Finnentrop Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":24.99,"o":24.99,"k":"list"},{"d":"2026-10-09","p":7.49,"o":24.99,"k":"obs"}]},{"id":4678840,"t":"West Somerset Railway Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":22.99,"o":22.99,"k":"list"},{"d":"2026-10-09","p":6.89,"o":22.99,"k":"obs"}]},{"id":4678830,"t":"Rapid Transit Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":4678820,"t":"Great Western Express Remastered Route Add-On","pre":"TSW7","d":"2026-08-25","ty":"route","rev":"","h":[{"d":"2026-08-25","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":8.99,"o":29.99,"k":"obs"}]},{"id":3662630,"t":"Brighton Main Line: London Victoria - Brighton Route Add-On","pre":"TSW6","d":"2025-08-26","ty":"route","rev":"Mixed (Steam-Wunschliste)","wish":1,"h":[{"d":"2025-08-26","p":29.99,"o":29.99,"k":"list"},{"d":"2026-10-09","p":29.99,"o":29.99,"k":"obs"}],"flag":"Widerspruch: Die US-Wunschliste zeigte am 09.10.2026 -70 % ($8,99), die deutsche Store-Seite zeigt 29,99 € ohne Rabatt. Bitte auf Steam prüfen."}];
+const RESEARCH={"4680170":{"rat":{"gameplay":7,"route":8,"realism":7,"vehicles":5,"content":5,"av":7,"tech":6,"value":5},"scenic":9,"ext":"Steam: Die TSW6-Ausgabe der Strecke hat 82 % positive Reviews (17 Stück). Für die TSW7-Ausgabe nennt die Wunschliste nur „1 Nutzerreview“.","ev":"Strecke Innsbruck – Garmisch-Partenkirchen, rund 60 km, Setting 1989, ÖBB 1020 „Krokodil“ und BR 111, 5 Szenarien (Testbericht zur TSW5-Ausgabe), Steigungen bis 3,8 %, Entwickler TSG. Ein Tester lobt Kulisse und Sichtweite sowie das anspruchsvolle Fahren der 1020. Im Feedback-Thread (2025) wurden schwebende Objekte, ein flach wirkendes Innsbruck und Tonfehler gemeldet; ob das behoben ist, ist unbekannt. Halte pro Fahrt sind nicht belegt, deshalb gibt es keine Bewertung für den Fahrgastbetrieb. Preis-Leistung bezieht sich auf den Preis vom 09.10.2026. Die Zahlen sind Schätzungen, keine Messwerte.","links":[["Testbericht TSW5-Ausgabe","https://www.gamecell.co.uk/reviews/tsw5-mittenwaldbahn-innsbruck---garmisch-partenkirchen"],["Steam (TSW6-Ausgabe)","https://store.steampowered.com/app/3663490/"],["Dovetail-Forum: Feedback","https://forums.dovetailgames.com/threads/mittenwaldbahn-innsbruck-garmisch-partenkirchen-feedback-thread.89204/"]]},"4680000":{"rat":{"gameplay":7,"route":7,"pax":8,"realism":7,"vehicles":6,"content":7,"value":9},"scenic":6,"ext":"PlayStation Store: 4,57 von 5 Sternen bei 46 Bewertungen (TSW5-Ausgabe) und 4,35 bei 31 (TSW6-Ausgabe). Das sind Vorgänger-Ausgaben, keine TSW7-Werte. Die Wunschliste nennt für TSW7 „4 Nutzerreviews“.","ev":"89 km von Rosenheim nach Salzburg, Stand 2013, grenzüberschreitender Regionalverkehr mit BR 111, dazu BR 185.2 und ÖBB 4024 für Güter- und S-Bahn-Dienste. Die Beschreibung nennt Halte in Orten der bayerischen Hügel; die genaue Haltehäufigkeit ist nicht belegt (Bewertung ist eine Schätzung). Preis-Leistung bezieht sich auf den Preis vom 09.10.2026 (8,99 €). Die Zahlen sind Schätzungen, keine Messwerte.","links":[["Steam","https://store.steampowered.com/app/4680000/"],["PlayStation Store (TSW5-Ausgabe)","https://store.playstation.com/en-au/product/EP2866-PPSA23364_00-TSW5ROSENHEIMSAL"],["PlayStation Store (TSW6-Ausgabe)","https://store.playstation.com/en-us/product/EP2866-PPSA29953_00-TSW6ROSENHEIMSAL"]]},"3662630":{"rat":{"gameplay":7,"route":7,"pax":9,"realism":7,"vehicles":5,"content":7,"tech":5},"scenic":4,"ext":"Steam (TSW6-Ausgabe): „Gemischt“, die Anzahl der Reviews ist nicht abrufbar. PlayStation Store: 4,5 von 5 Sternen bei 38 Bewertungen (TSW6) und 4,44 bei 61 (TSW5).","ev":"80 km (50 Meilen) London Victoria – Brighton, inklusive langsamer Gleise über Redhill und den Reigate-Zweig; Pendlerverkehr mit „Dutzenden Zügen pro Stunde“ (Clapham Junction, East Croydon) plus Gatwick Express. Fahrzeuge: Class 377/4 und 387/2. Dichter Haltebetrieb, städtische Landschaft (Schätzung). Der Grund für „Gemischt“ auf Steam ist nicht geprüft, deshalb Technik nur mittel. Preis-Leistung ist bewusst leer: Die US-Wunschliste zeigte −70 %, der deutsche Store (und seine Preisschnittstelle am 09.10.2026) 29,99 € ohne Rabatt. Solange das ungeklärt ist, rate ich keinen Wert. Die Zahlen sind Schätzungen, keine Messwerte.","links":[["Steam","https://store.steampowered.com/app/3662630/"],["Steam (TSW5-Ausgabe)","https://store.steampowered.com/app/2969930"],["PlayStation Store (TSW6-Ausgabe)","https://store.playstation.com/en-us/product/EP2866-PPSA29953_00-TSW6RHLONDONBRTN"]]},"4680030":{"rat":{"gameplay":7,"route":7,"pax":8,"vehicles":4,"content":6,"value":8},"scenic":7,"ext":"PlayStation Store: 4,33 bis 4,43 von 5 Sternen bei 35 bis 39 Bewertungen (TSW5- und TSW6-Ausgabe, Vorgänger). Die Wunschliste nennt für TSW7 „1 Nutzerreview“.","ev":"Fife Circle mit Forth Bridge und 5,5 Meilen neuer Levenmouth-Strecke (2024), Pendlerbetrieb mit ScotRail Class 170 (nur ein Fahrzeugtyp). Haltehäufigkeit und Szenarienzahl sind nicht belegt (Schätzung aus dem Pendlercharakter). Preis-Leistung bezieht sich auf den Preis vom 09.10.2026. Die Zahlen sind Schätzungen, keine Messwerte.","links":[["Steam","https://store.steampowered.com/app/4680030/"],["PlayStation Store (TSW6-Ausgabe)","https://store.playstation.com/en-gb/product/EP2866-PPSA29953_00-TSW6FIFECIRCLEFC"]]},"4680150":{"rat":{"gameplay":7,"vehicles":8,"content":3,"value":5},"ext":"PlayStation Store: 4,43 von 5 Sternen bei 126 Bewertungen (TSW5-Ausgabe, Vorgänger). Steam TSW7: keine Reviews.","ev":"Nur ein Fahrzeug (Class 390 in 9- und 11-Wagen-Variante) mit Szenarien und Timetable-Ebene für die West Coast Main Line London Euston – Milton Keynes. Für das volle Erlebnis wird die Strecke separat benötigt. Frühere Ausgaben waren laut Deku Deals deutlich günstiger (Steam-TSW6-Ausgabe bis −65 %). Das ist ein Hinweis, aber keine Preishistorie dieses Eintrags. Preis-Leistung bezieht sich auf den Preis vom 09.10.2026. Die Zahlen sind Schätzungen, keine Messwerte.","links":[["Steam","https://store.steampowered.com/app/4680150/"],["Deku Deals","https://www.dekudeals.com/items/train-sim-world-7-avanti-west-coast-br-class-390-pendolino-emu-add-on"],["PlayStation Store (TSW5-Ausgabe)","https://store.playstation.com/en-au/product/EP2866-PPSA23364_00-TSW5390PENDOLINO"]]},"4714930":{"rat":{"vehicles":8,"content":3,"pax":5,"tech":5,"value":3},"ext":"Steam: „Gemischt“ (46 % von 15 Reviews positiv). Deku Deals: noch keine Wertungen.","ev":"ICE 4 (BR 412) für Szenarien und Timetable-Dienste auf Nürnberg – Würzburg; die Strecke wird separat empfohlen. Als Fernverkehrszug vermutlich weniger Halte (Schätzung). Die Gründe für die gemischte Steam-Bewertung sind nicht geprüft. Preis-Leistung bezieht sich auf den Preis vom 09.10.2026 (17,99 €, ohne Rabatt). Die Zahlen sind Schätzungen, keine Messwerte.","links":[["Steam","https://store.steampowered.com/app/4714930/"],["Deku Deals","https://www.dekudeals.com/items/train-sim-world-7-db-br-412-ice-4-high-speed-emu"],["Dovetail-Forum: ICE 4","https://forums.dovetailgames.com/threads/ice-4-db-br-412.98037/"]]}};
+
+</script>
+<script>
+(()=>{
+'use strict';
+/* ---------- Konstanten ---------- */
+const CR=[['gameplay','Gameplay',15],['route','Strecke / Umgebung',15],['pax','Fahrgastbetrieb & Halte',12],['realism','Simulationsrealismus',12],['vehicles','Fahrzeuge',10],['content','Content-Menge',10],['av','Grafik & Sound',8],['tech','Technik / Stabilität',6],['value','Preis-Leistung',7],['replay','Wiederspielwert',5]];
+const TABS=[['uebersicht','Übersicht'],['wunschliste','Wunschliste'],['katalog','Katalog'],['empfehlung','Empfehlung'],['analyse','Analyse'],['vergleich','Vergleich'],['rankings','Rankings'],['preise','Preise'],['mods','Mods'],['einstellungen','Einstellungen']];
+const EVENTS=[
+ {n:'Steam Autumn Sale',s:'Herbst',a:'2026-10-01',b:'2026-10-08',k:'sale'},
+ {n:'Steam Next Fest',a:'2026-10-19',b:'2026-10-26',k:'fest'},
+ {n:'Steam Scream V Fest',a:'2026-10-26',b:'2026-11-02',k:'fest'},
+ {n:'Steam Winter Sale',s:'Winter',a:'2026-12-17',b:'2027-01-04',k:'sale'},
+ {n:'Steam Spring Sale',s:'Frühling',a:'2027-03-18',b:'2027-03-25',k:'sale'}];
+const PROMO_END={4680150:'2026-10-22'};
+const SYS={min:'i5-4690 oder Ryzen 5 1500X, 8 GB RAM, GTX 750 Ti oder RX 460 (2 GB VRAM), 35 GB Speicher',rec:'i5-9600K oder Ryzen 5 3600, 16 GB RAM, RTX 2060 oder RX 5700 (8 GB VRAM), 35 GB Speicher',src:'Steam-Seite des Class-390-DLC (Basisspiel TSW7), 09.10.2026'};
+const WL_URL='https://store.steampowered.com/wishlist/id/Bedsleeper8888/';
+const DLC_URL='https://store.steampowered.com/dlc/4678800/';
+const STEAMID='76561198765454534';
+const MON=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+
+/* ---------- Helfer ---------- */
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=(s,r)=>(r||document).querySelector(s);
+const eur=n=>n==null||isNaN(n)?'unbekannt':Number(n).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+const dts=s=>{if(!s)return 'unbekannt';const d=new Date(s+'T00:00:00');return isNaN(d)?s:d.toLocaleDateString('de-DE')};
+const dshort=s=>{const d=new Date(s+'T00:00:00');return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'};
+const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const dayDiff=(a,b)=>Math.round((Date.parse(b+'T00:00:00')-Date.parse(a+'T00:00:00'))/864e5);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+let toastT=0;
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},2600)}
+
+/* ---------- Zustand ---------- */
+const KEY='swa2';
+function loadState(){
+  let s=null;try{s=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+  const d={v:2,w:Object.fromEntries(CR.map(c=>[c[0],c[2]])),buy:{wd:25,max:60,ty:'',scope:'all'},hw:{ram:'',ssd:''},sel:[],cur:null,u:{},extra:[],auto:true,refreshed:null,migrated:0};
+  s=Object.assign(d,s||{});s.buy=Object.assign(d.buy,s.buy||{});s.w=Object.assign(d.w,s.w||{});s.hw=Object.assign(d.hw,s.hw||{});
+  if(!s.migrated){
+    s.migrated=1;
+    try{const o=JSON.parse(localStorage.getItem('swa')||'null');
+      if(o){ if(o.w)CR.forEach(c=>{if(typeof o.w[c[0]]==='number')s.w[c[0]]=o.w[c[0]]});
+        if(o.hw)Object.assign(s.hw,o.hw);
+        (o.games||[]).forEach(g=>{const u=s.u[g.id]||(s.u[g.id]={});if(g.owned)u.owned=true;if(g.fav)u.fav=true;if(g.target!=null)u.target=g.target;if(g.hours!=null)u.hours=g.hours;if(g.note)u.note=g.note})}
+    }catch(e){}
+  }
+  return s;
+}
+const S=loadState();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const U=id=>S.u[id]||(S.u[id]={});
+
+/* ---------- Datenmodell ---------- */
+const SRV={on:false,cfg:null,st:null,wl:null,owned:new Set(),hist:{},cat:{},games:[],mods:null,job:null};
+let G=[],BY=new Map;
+function buildModel(){
+  const known=new Set([...BASE.map(b=>b.id),...S.extra.map(x=>x.id)]);
+  const fromSrv=Object.keys(SRV.cat).map(Number).filter(id=>!known.has(id)).map(id=>({id,t:SRV.cat[id].t,pre:SRV.cat[id].pre,d:SRV.cat[id].d,ty:SRV.cat[id].ty,h:[],wish:0}));
+  G=[...BASE,...fromSrv,...S.extra].map(b=>{
+    const m=new Map();
+    [...(b.h||[]),...(SRV.hist[b.id]||[]).map(p=>({d:p.d,p:p.p,o:p.o,k:'obs',src:'Steam'}))].forEach(p=>m.set(p.d+'|'+p.k,p));
+    return {id:b.id,t:b.t,pre:b.pre||'TSW7',d:b.d||'',ty:b.ty||'other',rev:b.rev||'',flag:b.flag||'',base:[...m.values()],wish0:!!b.wish};
+  });
+  BY=new Map(G.map(g=>[g.id,g]));
+}
+const R=g=>RESEARCH[g.id]||null;
+const hist=g=>{const u=S.u[g.id]||{};return [...g.base,...(u.hist||[])].sort((a,b)=>a.d===b.d?(a.k==='list'?-1:1):(a.d<b.d?-1:1))};
+const curPt=g=>{const h=hist(g);for(let i=h.length-1;i>=0;i--)if(h[i].k==='obs')return h[i];return h[h.length-1]||{p:null,o:null,d:''}};
+const price=g=>curPt(g).p;
+const orig=g=>curPt(g).o;
+const disc=g=>{const c=curPt(g);return c.o>c.p&&c.p!=null?Math.round((1-c.p/c.o)*100):0};
+const isWish=g=>{const u=S.u[g.id];if(u&&u.wish!=null)return !!u.wish;if(SRV.wl)return SRV.wl.has(g.id);return g.wish0};
+const autoOwned=g=>SRV.owned.has(g.id);
+const isOwned=g=>{const u=S.u[g.id];if(u&&u.owned!=null)return !!u.owned;return autoOwned(g)};
+const isFav=g=>!!(S.u[g.id]&&S.u[g.id].fav);
+const shortT=g=>g.t;
+const REVDE={'Overwhelmingly Positive':'Überwältigend positiv','Very Positive':'Sehr positiv','Mostly Positive':'Größtenteils positiv','Positive':'Positiv','Mixed':'Gemischt','Mostly Negative':'Größtenteils negativ','Very Negative':'Sehr negativ','Overwhelmingly Negative':'Überwältigend negativ','Negative':'Negativ'};
+const REVRX='(Overwhelmingly Positive|Very Positive|Mostly Positive|Positive|Mixed|Mostly Negative|Very Negative|Overwhelmingly Negative|Negative)';
+function revText(g){const r=g.rev||'',m=r.match(new RegExp('^'+REVRX+'\\b\\D*?(\\d+)%\\D+?(\\d+)'));if(m)return REVDE[m[1]]+', '+m[2]+' % von '+m[3]+' Reviews positiv';const w=r.match(new RegExp('^'+REVRX));return w?REVDE[w[1]]:r}
+const revShort=g=>revText(g).split(',')[0].slice(0,24);
+const steamUrl=g=>g.id>0?'https://store.steampowered.com/app/'+g.id+'/':'https://store.steampowered.com/search/?term='+encodeURIComponent('Train Sim World '+g.t);
+const hue=id=>(Math.abs(id)*47)%360;
+const mono=g=>{const w=g.t.replace(/[^A-Za-zÄÖÜäöü0-9 ]/g,' ').split(/\s+/).filter(x=>x.length>1&&!/^(Add|On|Route|Loco|BR|DB|Pack|The|Line)$/i.test(x));return ((w[0]||'T')[0]+((w[1]||'')[0]||'')).toUpperCase()};
+
+/* ---------- Bewertung ---------- */
+function rating(g,k){
+  const u=S.u[g.id];
+  if(u&&u.rat&&k in u.rat)return u.rat[k];
+  const r=R(g);
+  if(r&&r.rat&&r.rat[k]!=null)return r.rat[k];
+  if(k==='value'){const h=hours(g),p=price(g);if(h&&p){const c=p/h;return c<=.5?10:c<=1?8:c<=2?6:c<=4?4:2}}
+  return null;
+}
+const hours=g=>{const u=S.u[g.id];return u&&u.hours!=null?u.hours:null};
+const scenic=g=>{const u=S.u[g.id];if(u&&u.scenic!==undefined)return u.scenic;const r=R(g);return r&&r.scenic!=null?r.scenic:null};
+function score(g,w){
+  w=w||S.w;let a=0,b=0,t=0;
+  CR.forEach(c=>{const k=c[0];t+=+w[k];const r=rating(g,k);if(r!=null){a+=w[k]*r/10;b+=+w[k]}});
+  return {s:b>0?Math.round(100*a/b):null,conf:t>0?b/t:0};
+}
+const band=s=>s==null?'Noch keine Bewertung':s>=95?'Außergewöhnlich':s>=90?'Hervorragend':s>=80?'Starke Empfehlung':s>=70?'Gute Option':s>=60?'Genau abwägen':s>=40?'Niedrige Priorität':'Passt kaum';
+const rated=g=>{const x=score(g);return x.s!=null&&x.conf>=.4};
+const dealIdx=g=>.7*disc(g)+.3*Math.min(100,Math.max(0,(orig(g)-price(g)))/40*100);
+function verdict(g){
+  const s=score(g),d=disc(g),u=S.u[g.id]||{},p=price(g);
+  if(isOwned(g))return {t:'Besitzt du schon',c:'ac'};
+  if(u.target!=null&&p!=null&&p<=u.target)return {t:'Zielpreis erreicht: kaufen',c:'good'};
+  if(!rated(g)){return d>=50?{t:'Stark reduziert, aber noch nicht bewertet',c:'warn'}:{t:'Noch nicht bewertet',c:''}}
+  if(s.s>=70&&d>=50)return {t:'Jetzt kaufen',c:'good'};
+  if(s.s>=70)return {t:d>=30?'Kaufen oder auf Tiefstpreis warten':'Beim nächsten Sale kaufen',c:'good'};
+  if(s.s>=50)return {t:'Nur zu einem Zielpreis kaufen',c:'warn'};
+  return {t:'Niedrige Priorität',c:'bad'};
+}
+function waitHint(g){
+  const d=disc(g),ns=nextSale(),dd=ns?dayDiff(todayISO(),ns.a):null,w=ns?`Winter Sale ab ${dshort(ns.a)} (in ${dd} Tagen)`:'nächster Sale';
+  if(isOwned(g))return 'Du besitzt den Eintrag bereits.';
+  if(d>=70)return `Mit ${d} % Rabatt schon sehr tief. Ein belegter Grund zu warten ist nicht bekannt; ob der ${w} tiefer geht, lässt sich nicht vorhersagen.`;
+  if(d>=40)return `${d} % Rabatt ist ordentlich. Der ${w} bringt vielleicht mehr, das ist nicht belegt.`;
+  if(d>0)return `Nur ${d} % Rabatt. Warten auf den ${w} ist eine Option, ob dort reduziert wird, ist nicht belegt.`;
+  return `Aktuell kein Rabatt. Nächste bestätigte Gelegenheit: ${w}.`;
+}
+function nextSale(){const t=todayISO();return EVENTS.find(e=>e.k==='sale'&&e.b>=t)||null}
+
+/* ---------- Auswahl: beste Käufe ---------- */
+function picks(){
+  const b=S.buy,mx=b.max>=60?Infinity:b.max;
+  let pool=G.filter(g=>!isOwned(g)&&price(g)!=null&&price(g)<=mx&&(!b.ty||g.ty===b.ty)&&(b.scope==='all'||isWish(g)));
+  const r=pool.filter(rated).map(g=>({g,v:score(g).s*(1-b.wd/100)+disc(g)*b.wd/100})).sort((x,y)=>y.v-x.v);
+  const ids=new Set(r.map(x=>x.g.id));
+  const d=pool.filter(g=>!ids.has(g.id)&&disc(g)>0).map(g=>({g,v:dealIdx(g)})).sort((x,y)=>y.v-x.v);
+  return {rated:r,deals:d};
+}
+
+/* ---------- Routing ---------- */
+let tab='uebersicht';
+const tabLabel=id=>(TABS.find(t=>t[0]===id)||[])[1]||id;
+function go(t,push){tab=t;try{if(push!==false)history.replaceState(null,'','#'+t)}catch(e){}renderNav();renderMain();window.scrollTo(0,0)}
+function renderNav(){
+  const cnt={wunschliste:G.filter(isWish).length,katalog:G.length};
+  $('#nav').innerHTML=TABS.map(t=>`<button type="button" data-act="tab" data-t="${t[0]}"${t[0]===tab?' aria-current="page"':''}><span>${t[1]}</span>${cnt[t[0]]!=null?`<span class="cnt">${cnt[t[0]]}</span>`:''}</button>`).join('');
+}
+function head(title,sub){
+  const rf=SRV.on&&SRV.st&&SRV.st.refreshedAt?'Steam-Stand '+new Date(SRV.st.refreshedAt).toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'}):S.refreshed?'Eigene Aktualisierung '+S.refreshed:'Preise Steam DE, '+dts(ASOF);
+  return `<div class="mhead"><div><h1>${esc(title)}</h1>${sub?`<p class="mu sm">${sub}</p>`:''}</div><div class="row"><span class="stand">${esc(rf)}</span><button type="button" class="btn" data-act="refresh">↻ Aktualisieren</button></div></div>`;
+}
+function renderMain(){
+  const fn={uebersicht:vUeber,wunschliste:vWunsch,katalog:vKatalog,empfehlung:vEmpf,mods:vMods,analyse:vAnalyse,vergleich:vVergleich,rankings:vRank,preise:vPreise,einstellungen:vSettings}[tab]||vUeber;
+  $('#main').innerHTML=fn();
+  const after={katalog:afterKatalog,preise:afterPreise,mods:drawChat}[tab];if(after)after();
+}
+
+/* ---------- Regler-Panel ---------- */
+function renderPanel(){
+  const tot=CR.reduce((a,c)=>a+ +S.w[c[0]],0)||1;
+  const b=S.buy;
+  $('#wp').innerHTML=`<h3><span>Regler</span><button type="button" class="x" data-act="wp" aria-label="Regler schließen">×</button></h3>
+  <p class="mu sm">Jede Änderung rechnet alle Scores und die Liste unten sofort neu.</p>
+  <div class="lbl" style="margin-top:12px">Gewichtung der Kriterien</div>
+  ${CR.map(c=>`<div class="sl"><label for="w_${c[0]}"><span>${c[1]}</span></label><input type="range" id="w_${c[0]}" min="0" max="30" step="1" value="${S.w[c[0]]}" data-in="w" data-k="${c[0]}"><span class="v" id="wv_${c[0]}">${Math.round(100*S.w[c[0]]/tot)}%</span></div>`).join('')}
+  <div class="row" style="margin-top:6px"><button type="button" class="btn g sm" data-act="wreset">Standard</button></div>
+  <div class="lbl" style="margin-top:16px">Kauf-Regler</div>
+  <div class="sl"><label for="b_wd"><span>Rabatt zählt mit</span></label><input type="range" id="b_wd" min="0" max="100" step="5" value="${b.wd}" data-in="buy" data-k="wd"><span class="v" id="bv_wd">${b.wd}%</span></div>
+  <div class="sl"><label for="b_max"><span>Höchstpreis</span></label><input type="range" id="b_max" min="5" max="60" step="1" value="${b.max}" data-in="buy" data-k="max"><span class="v" id="bv_max">${b.max>=60?'∞':b.max+'€'}</span></div>
+  <div class="row" style="margin-top:6px"><select id="b_ty" data-in="buy" data-k="ty" aria-label="Typ"><option value="">Alle Typen</option><option value="route"${b.ty==='route'?' selected':''}>Nur Strecken</option><option value="other"${b.ty==='other'?' selected':''}>Nur Fahrzeuge & Pakete</option></select>
+  <select id="b_scope" data-in="buy" data-k="scope" aria-label="Umfang"><option value="all"${b.scope==='all'?' selected':''}>Ganzer Katalog</option><option value="wish"${b.scope==='wish'?' selected':''}>Nur Wunschliste</option></select></div>
+  <div class="best" id="best"></div>`;
+  renderBest();
+}
+function renderBest(){
+  const el=$('#best');if(!el)return;
+  const p=picks(),R=recs().slice(0,3),d=p.deals.slice(0,3);
+  el.innerHTML=`<div class="lbl">Beste für dich</div>`+(R.length?R.map(x=>`<button type="button" class="it" data-act="open" data-id="${x.g.id}"><span>${esc(shortT(x.g))}</span><span class="num">${x.rated?x.q+' · ':'– · '}${eur(price(x.g))}</span></button>`).join(''):`<p class="mu sm">Nichts innerhalb dieser Grenzen.</p>`)+
+  `<div class="lbl" style="margin-top:8px">Beste Angebote (unbewertet)</div>`+(d.length?d.map(x=>`<button type="button" class="it" data-act="open" data-id="${x.g.id}"><span>${esc(shortT(x.g))}</span><span class="num">−${disc(x.g)}% · ${eur(price(x.g))}</span></button>`).join(''):`<p class="mu sm">Keine reduzierten Einträge in diesem Rahmen.</p>`);
+}
+let rq=0;
+function liveUpdate(){cancelAnimationFrame(rq);rq=requestAnimationFrame(()=>{renderBest();if(!['katalog','preise','einstellungen','mods'].includes(tab)){const y=window.scrollY;renderMain();window.scrollTo(0,y)}})}
+
+/* ---------- Bausteine ---------- */
+function ring(g,lg){const s=score(g);const ok=s.s!=null;return `<div class="ring${lg?' lg':''}${ok?'':' na'}" style="--s:${ok?s.s:0}" title="${ok?'Score '+s.s+' · Konfidenz '+Math.round(s.conf*100)+'%':'Noch keine Bewertung'}"><i>${ok?s.s:'–'}</i></div>`}
+function tile(g){return `<div class="tile" style="background:hsl(${hue(g.id)} 38% 30%)" aria-hidden="true">${esc(mono(g))}</div>`}
+function priceHtml(g){const d=disc(g);return `<div class="price"><span class="now">${eur(price(g))}</span>${d?`<s>${eur(orig(g))}</s><span class="pill good">−${d}%</span>`:''}</div>`}
+function card(g){
+  const v=verdict(g),s=score(g),sel=S.sel.includes(g.id);
+  return `<article class="card gc"><div class="top">${tile(g)}<div><div class="ti">${esc(shortT(g))}</div><div class="mu sm">${esc(g.pre)} · ${g.ty==='route'?'Strecke':'Fahrzeug / Paket'} · ${dts(g.d)}</div></div>${ring(g)}</div>
+  ${priceHtml(g)}
+  <div class="row"><span class="pill ${v.c}">${esc(v.t)}</span>${s.s!=null?`<span class="pill">Konfidenz ${Math.round(s.conf*100)}%</span>`:''}${g.rev?`<span class="pill">${esc(revShort(g))}</span>`:''}</div>
+  <div class="row"><button type="button" class="btn sm" data-act="open" data-id="${g.id}">Analyse</button><button type="button" class="btn g sm${sel?' on':''}" data-act="cmp" data-id="${g.id}">${sel?'✓ Im Vergleich':'Vergleichen'}</button><a class="btn g sm" href="${esc(steamUrl(g))}" target="_blank" rel="noopener">Steam</a><button type="button" class="btn g sm${isOwned(g)?' on':''}" data-act="own" data-id="${g.id}">${isOwned(g)?'✓ Besitze ich':'Besitze ich'}</button><button type="button" class="btn g sm" data-act="fav" data-id="${g.id}" aria-label="Favorit" aria-pressed="${isFav(g)}">${isFav(g)?'★':'☆'}</button></div></article>`;
+}
+
+/* ---------- Übersicht ---------- */
+function boardHtml(){
+  const t=todayISO(),ev=EVENTS.filter(e=>e.b>=t).slice(0,4),ns=nextSale();
+  const rows=ev.map(e=>{const dd=dayDiff(t,e.a),run=e.a<=t;const first=ns&&e===ns;return `<div class="br${first?'':' dim'}"><b>${dshort(e.a)}</b><span class="n">${esc(e.n)}${e.k==='fest'?' (Themenfest, TSW-Rabatte nicht belegt)':''}<br><span class="sm">bis ${dshort(e.b)}${e.b.slice(0,4)!==e.a.slice(0,4)?e.b.slice(0,4):''}</span></span><span class="d">${run?'läuft jetzt':'in '+dd+' Tagen'}</span></div>`}).join('');
+  return `<div class="board" role="region" aria-label="Sale-Fahrplan"><div class="bh"><span>Nächste Sale-Abfahrten</span><span>Quelle Steam/Valve</span></div>${rows}</div>`;
+}
+function vUeber(){
+  const W=G.filter(isWish),tot=W.reduce((a,g)=>a+orig(g),0),now=W.reduce((a,g)=>a+price(g),0);
+  const p=picks(),R0=recs()[0],top=R0?{g:R0.g}:null,deal=p.deals[0];
+  const scs=W.map(g=>score(g).s).filter(x=>x!=null),avg=scs.length?Math.round(scs.reduce((a,b)=>a+b,0)/scs.length):null;
+  const best=W.filter(rated).sort((a,b)=>score(b).s-score(a).s)[0];
+  const sc=W.filter(g=>scenic(g)!=null).sort((a,b)=>scenic(b)-scenic(a))[0];
+  const px=W.filter(g=>rating(g,'pax')!=null).sort((a,b)=>rating(b,'pax')-rating(a,'pax'))[0];
+  const k=(l,v,s,to)=>`<button type="button" class="card" style="text-align:left;cursor:pointer" data-act="tab" data-t="${to}"><div class="lbl">${l}</div><div class="num" style="font-size:1.5rem;margin-top:4px">${v}</div><div class="mu sm">${s||''}</div></button>`;
+  const ow=G.filter(isOwned).length;
+  return head('Übersicht',`${W.length} Einträge auf deiner Wunschliste, ${G.length} im Katalog, ${ow} als „besitze ich“ abgehakt.`)+
+  `<div class="stack">${boardHtml()}
+  <div class="grid kpi">${k('Wunschliste',W.length,'Spiele & DLC','wunschliste')}${k('Regulär',eur(tot),'Summe Normalpreise','preise')}${k('Aktuell',eur(now),'Summe aktuelle Preise','preise')}${k('Ersparnis',eur(tot-now),tot?Math.round(100*(tot-now)/tot)+' % unter Normalpreis':'','preise')}${k('Ø Score',avg??'–',scs.length+' von '+W.length+' bewertet','rankings')}</div></div>
+  <div class="sec"><h2>Bester nächster Kauf <small>nach deinen Reglern</small></h2>
+  <div class="grid">${top?card(top.g):`<div class="card"><p>Noch kein bewerteter Eintrag innerhalb deiner Regler-Grenzen.</p></div>`}
+  <div class="card stack"><div class="lbl">Warum</div>${top?`<p>${esc(shortT(top.g))} ${score(top.g).s!=null?'kommt auf Score '+score(top.g).s+' bei ':'kostet '}${eur(price(top.g))}${disc(top.g)?` (−${disc(top.g)} %)`:''}. Deine Regler: Rabatt zählt zu ${S.buy.wd} %, Höchstpreis ${S.buy.max>=60?'ohne Limit':S.buy.max+' €'}.</p><p class="mu sm">${esc(waitHint(top.g))}</p>`:`<p class="mu">Erhöhe den Höchstpreis oder bewerte weitere Einträge im Tab Analyse.</p>`}</div></div></div>
+  <div class="sec"><h2>Beste Angebote <small>noch nicht bewertet, nur Preisdaten</small></h2><div class="grid">${p.deals.slice(0,6).map(x=>card(x.g)).join('')||'<div class="card mu">Keine reduzierten Einträge in diesem Rahmen.</div>'}</div></div>
+  <div class="sec"><h2>Schnellzugriff</h2><div class="grid sm3">${k('Höchster Score',best?score(best).s:'–',best?esc(shortT(best)):'noch nichts bewertet','rankings')}${k('Schönste Strecke',sc?scenic(sc):'–',sc?esc(shortT(sc)):'Landschaft noch nicht bewertet','rankings')}${k('Bester Fahrgastbetrieb',px?rating(px,'pax'):'–',px?esc(shortT(px)):'noch nichts bewertet','rankings')}${k('Größter Rabatt',deal?'−'+disc(deal.g)+'%':'–',deal?esc(shortT(deal.g)):'','katalog')}</div></div>`;
+}
+
+/* ---------- Wunschliste ---------- */
+const F={q:'',sort:'score',ty:'',max:'',onlyDisc:false};
+function wishList(){
+  let l=G.filter(isWish).filter(g=>g.t.toLowerCase().includes(F.q.toLowerCase())&&(!F.ty||g.ty===F.ty)&&(!F.max||price(g)<=+F.max)&&(!F.onlyDisc||disc(g)>0));
+  const key={score:g=>-(score(g).s??-1),price:g=>price(g),discount:g=>-disc(g),date:g=>-Date.parse(g.d||0),title:g=>g.t.toLowerCase()}[F.sort];
+  return l.sort((a,b)=>key(a)>key(b)?1:key(a)<key(b)?-1:0);
+}
+function vWunsch(){
+  return head('Wunschliste','Deine Steam-Wunschliste (Bedsleeper8888). Weitere Einträge nimmst du im Katalog mit „Auf Wunschliste“ auf.')+
+  `<div class="row" style="margin-bottom:14px"><input type="search" id="fq" placeholder="Suchen" value="${esc(F.q)}" data-in="f" data-k="q" aria-label="Suchen">
+  <select id="fs" data-in="f" data-k="sort" aria-label="Sortieren">${[['score','Score'],['price','Preis'],['discount','Rabatt'],['date','Release'],['title','Name']].map(x=>`<option value="${x[0]}"${F.sort===x[0]?' selected':''}>Sortiert nach ${x[1]}</option>`).join('')}</select>
+  <select id="ft" data-in="f" data-k="ty" aria-label="Typ"><option value="">Alle Typen</option><option value="route"${F.ty==='route'?' selected':''}>Strecken</option><option value="other"${F.ty==='other'?' selected':''}>Fahrzeuge & Pakete</option></select>
+  <input type="number" id="fm" placeholder="Max. Preis €" style="width:9rem" value="${esc(F.max)}" data-in="f" data-k="max" aria-label="Maximaler Preis">
+  <label class="row" style="gap:6px"><input type="checkbox" id="fd" ${F.onlyDisc?'checked':''} data-in="f" data-k="onlyDisc"> nur reduziert</label></div>
+  <div class="grid" id="wl">${wishCards()}</div>`;
+}
+const wishCards=()=>wishList().map(card).join('')||'<div class="card mu">Keine Treffer.</div>';
+
+/* ---------- Katalog ---------- */
+const C={q:'',ty:'',only:'',sort:'disc'};
+function catRows(){
+  let l=G.filter(g=>g.t.toLowerCase().includes(C.q.toLowerCase())&&(!C.ty||g.ty===C.ty));
+  if(C.only==='disc')l=l.filter(g=>disc(g)>0);if(C.only==='free')l=l.filter(g=>!isOwned(g));if(C.only==='own')l=l.filter(isOwned);if(C.only==='wish')l=l.filter(isWish);
+  const key={disc:g=>-disc(g),price:g=>price(g),title:g=>g.t.toLowerCase(),date:g=>-Date.parse(g.d||0),save:g=>-(orig(g)-price(g))}[C.sort];
+  return l.sort((a,b)=>key(a)>key(b)?1:key(a)<key(b)?-1:0);
+}
+function catRow(g){
+  const d=disc(g);
+  return `<div class="cr${isOwned(g)?' owned':''}" id="cr${g.id}"><input type="checkbox" data-in="own" data-id="${g.id}" ${isOwned(g)?'checked':''} aria-label="Besitze ich: ${esc(g.t)}"><div style="min-width:0"><button type="button" class="tt" data-act="open" data-id="${g.id}">${esc(g.t)}</button><div class="mu sm">${esc(g.pre)} · ${g.ty==='route'?'Strecke':'Fahrzeug / Paket'} · ${dts(g.d)}${rated(g)?` · Score ${score(g).s}`:''}${autoOwned(g)&&!(S.u[g.id]&&S.u[g.id].owned!=null)?' · von Steam erkannt':''}</div></div><div class="pr num">${eur(price(g))}${d?`<br><span class="sm"><s class="mu">${eur(orig(g))}</s> <span style="color:var(--good)">−${d}%</span></span>`:''}</div><div class="ac2"><button type="button" class="btn g sm${isWish(g)?' on':''}" data-act="wish" data-id="${g.id}">${isWish(g)?'✓ Wunschliste':'Auf Wunschliste'}</button><a class="btn g sm" href="${esc(steamUrl(g))}" target="_blank" rel="noopener">Steam</a></div></div>`;
+}
+function vKatalog(){
+  return head('Katalog','Alle Train-Sim-World-7-DLC von Steam (Preise in Euro). Hake an, was du besitzt; zusätzlich kannst du Einträge auf deine Wunschliste setzen.')+
+  `<div class="card flat sm" style="margin-bottom:14px">Der Katalog enthält die ${G.length} Einträge, die Steam am 09.10.2026 für TSW7 und deine Wunschliste lieferte. Der Typ (Strecke oder Fahrzeug) ist aus dem Titel abgeleitet. Fehlt etwas, fügst du es unten per Steam-URL hinzu.</div>
+  <div class="row" style="margin-bottom:10px"><input type="search" id="cq" placeholder="Suchen" value="${esc(C.q)}" data-in="c" data-k="q" aria-label="Katalog durchsuchen">
+  <select id="cty" data-in="c" data-k="ty" aria-label="Typ"><option value="">Alle Typen</option><option value="route"${C.ty==='route'?' selected':''}>Strecken</option><option value="other"${C.ty==='other'?' selected':''}>Fahrzeuge & Pakete</option></select>
+  <select id="cof" data-in="c" data-k="only" aria-label="Filter">${[['','Alle'],['disc','Nur reduziert'],['free','Noch nicht besessen'],['own','Nur besessene'],['wish','Nur Wunschliste']].map(x=>`<option value="${x[0]}"${C.only===x[0]?' selected':''}>${x[1]}</option>`).join('')}</select>
+  <select id="cso" data-in="c" data-k="sort" aria-label="Sortieren">${[['disc','Größter Rabatt'],['save','Größte Ersparnis €'],['price','Niedrigster Preis'],['date','Neueste'],['title','Name']].map(x=>`<option value="${x[0]}"${C.sort===x[0]?' selected':''}>${x[1]}</option>`).join('')}</select></div>
+  <div class="row sp" style="margin-bottom:10px"><b id="ccount" class="num"></b><div class="row"><button type="button" class="btn g sm" data-act="allown" data-v="1">Alle sichtbaren abhaken</button><button type="button" class="btn g sm" data-act="allown" data-v="0">Haken entfernen</button></div></div>
+  <div class="cat" id="cat"></div>
+  <div class="sec"><h2>Eintrag hinzufügen</h2><div class="card stack"><p class="mu sm">Eine Steam-Store-URL pro Zeile, oder „App-ID,Titel,Preis,Normalpreis“. Der Eintrag landet im Katalog und auf deiner Wunschliste.</p><textarea id="addin" rows="3" placeholder="https://store.steampowered.com/app/4680150/…"></textarea><div class="row"><button type="button" class="btn" data-act="add">Hinzufügen</button></div></div></div>`;
+}
+function afterKatalog(){const l=catRows();$('#cat').innerHTML=l.map(catRow).join('')||'<div class="cr mu">Keine Treffer.</div>';catCount(l.length)}
+function catCount(n){const el=$('#ccount');if(el)el.textContent=(n??catRows().length)+' angezeigt · '+G.filter(isOwned).length+' von '+G.length+' abgehakt'}
+
+/* ---------- Preis-Diagramm ---------- */
+function niceMax(v){const st=v>40?10:v>20?5:v>8?2:1;return Math.ceil(v/st)*st}
+function chart(g){
+  const W=Math.max(300,Math.min(720,Math.round(($('#main').clientWidth||788)-66))),H=W<500?300:320,L=48,Rr=16,T=22,B=38,h=hist(g);
+  const t0=Math.min(Date.parse(h[0].d+'T00:00:00'),Date.parse('2026-08-20T00:00:00')),t1=Date.parse('2027-03-31T00:00:00');
+  const x=t=>L+(clamp(t,t0,t1)-t0)/(t1-t0)*(W-L-Rr);
+  const tg=(S.u[g.id]||{}).target;
+  const ymax=niceMax(Math.max(...h.map(p=>Math.max(p.o||0,p.p||0)),tg||0,1)*1.08);
+  const y=v=>T+(1-v/ymax)*(H-T-B);
+  let o=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Preisverlauf von ${esc(g.t)} mit Sale-Zeiträumen">`;
+  const bt=Math.round(ymax/4);
+  for(let i=0;i<=4;i++){const v=i*bt;o+=`<line class="gl" x1="${L}" x2="${W-Rr}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end">${v} €</text>`}
+  EVENTS.forEach(e=>{const a=Date.parse(e.a+'T00:00:00'),b=Date.parse(e.b+'T00:00:00');if(b<t0||a>t1)return;const xa=x(a),xb=Math.max(x(b),xa+3);const next=nextSale()===e;
+    o+=`<rect class="${e.k==='sale'?(next?'bandN':'bandS'):'bandF'}" x="${xa}" y="${T}" width="${xb-xa}" height="${H-T-B}"/>`;
+    if(e.k==='sale'){const late=xa>W-130;o+=`<text x="${late?xb:xa+3}" y="${T+11}" text-anchor="${late?'end':'start'}" class="${next?'t-w':'t-a'}">${esc(W<500&&e.s?e.s:e.n.replace('Steam ',''))}</text>`}});
+  const days=(t1-t0)/864e5,stepM=days>330?3:W<500?2:1;let d0=new Date(t0);d0=new Date(d0.getFullYear(),d0.getMonth()+(d0.getDate()>1?1:0),1);
+  for(let d=d0,i=0;d.getTime()<=t1;d=new Date(d.getFullYear(),d.getMonth()+1,1),i++){if(i%stepM)continue;const xx=x(d.getTime());o+=`<line class="ax" x1="${xx}" x2="${xx}" y1="${H-B}" y2="${H-B+5}"/><text x="${xx}" y="${H-B+18}" text-anchor="middle">${MON[d.getMonth()]}${d.getMonth()===0?' '+d.getFullYear():''}</text>`}
+  o+=`<line class="ax" x1="${L}" x2="${W-Rr}" y1="${H-B}" y2="${H-B}"/>`;
+  const tdy=Date.parse(todayISO()+'T00:00:00');
+  if(tdy>=t0&&tdy<=t1)o+=`<line class="today" x1="${x(tdy)}" x2="${x(tdy)}" y1="${T}" y2="${H-B}"/><text class="t-w" x="${x(tdy)}" y="${H-B-5}" text-anchor="${x(tdy)>W-90?'end':'start'}" dx="${x(tdy)>W-90?-4:4}">heute</text>`;
+  const pe=PROMO_END[g.id];if(pe){const xp=x(Date.parse(pe+'T00:00:00'));o+=`<line class="pe" x1="${xp}" x2="${xp}" y1="${T}" y2="${H-B}"/><text class="t-b" x="${xp+4}" y="${T+24}">Aktion endet ${dshort(pe)}</text>`}
+  if(tg!=null)o+=`<line class="tg" x1="${L}" x2="${W-Rr}" y1="${y(tg)}" y2="${y(tg)}"/><text class="t-g" x="${W-Rr}" y="${y(tg)-5}" text-anchor="end">Ziel ${tg} €</text>`;
+  for(let i=1;i<h.length;i++){const a=h[i-1],b=h[i],solid=a.k==='obs'&&b.k==='obs',xa=x(Date.parse(a.d+'T00:00:00')),xb=x(Date.parse(b.d+'T00:00:00'));o+=solid?`<path class="ln" d="M${xa} ${y(a.p)}H${xb}V${y(b.p)}"/>`:`<line class="ln d" x1="${xa}" y1="${y(a.p)}" x2="${xb}" y2="${y(b.p)}"/>`}
+  h.forEach(p=>{o+=`<circle class="pt${p.k==='list'?' h':''}" cx="${x(Date.parse(p.d+'T00:00:00'))}" cy="${y(p.p)}" r="5"><title>${dts(p.d)}: ${eur(p.p)} (${p.k==='list'?'Normalpreis, Annahme':'gemessen'})</title></circle>`});
+  const lp=h[h.length-1],lx=x(Date.parse(lp.d+'T00:00:00')),late=lx>W-90;o+=`<text class="halo" x="${lx+(late?-10:10)}" y="${y(lp.p)-10}" text-anchor="${late?'end':'start'}">${eur(lp.p)}</text>`;
+  return o+'</svg>';
+}
+function nextSaleCard(g){
+  const ns=nextSale(),t=todayISO();
+  return `<div class="card flat stack"><div><b>Voraussichtlich nächster Sale:</b> ${ns?`${esc(ns.n)}, ${dts(ns.a)} bis ${dts(ns.b)} (in ${dayDiff(t,ns.a)} Tagen)`:'nicht bekannt'}</div>
+  <p class="sm mu">Der Zeitraum steht fest (Valve-Fahrplan). Ob und wie tief dieses Spiel dort reduziert wird, ist nicht vorhersagbar, und echte Preisverläufe vor dem 09.10.2026 liegen nicht vor. Die Linie zeigt nur gemessene Punkte; der Release-Punkt ist als Normalpreis angenommen. ${PROMO_END[g.id]?`Für diesen Eintrag meldet Steam eine laufende Aktion bis ${dts(PROMO_END[g.id])}.`:'Das Ende der aktuellen Aktion nennt Steam für diesen Eintrag nicht.'}</p></div>`;
+}
+function chartBlock(g){
+  if(!hist(g).length)return `<div class="card"><b>Noch kein Preis bekannt.</b><p class="mu sm">Trag in der Analyse unter „Preisliste“ einen Preis ein oder lies die Daten über Aktualisieren ein.</p></div>`+nextSaleCard(g);
+  return `<div class="chartbox card">${chart(g)}<div class="legend" style="margin-top:8px"><span><i style="background:var(--ac)"></i>gemessener Preis</span><span><i style="border:2px solid var(--mu);background:none"></i>Normalpreis zum Release (Annahme)</span><span><i style="background:color-mix(in srgb,var(--warn) 40%,transparent)"></i>nächster Sale-Zeitraum</span><span><i style="background:color-mix(in srgb,var(--ac) 35%,transparent)"></i>andere Sales</span><span><i style="background:color-mix(in srgb,var(--mu) 30%,transparent)"></i>Themenfeste</span><span>Zeitachse: ${dts(hist(g)[0].d<'2026-08-20'?hist(g)[0].d:'2026-08-20')} bis 31.03.2027</span></div></div>`+nextSaleCard(g);
+}
+
+/* ---------- Analyse ---------- */
+function vAnalyse(){
+  let g=BY.get(S.cur);if(!g){g=G.filter(isWish).sort((a,b)=>(score(b).s??-1)-(score(a).s??-1))[0]||G[0];S.cur=g.id}
+  const u=S.u[g.id]||{},r=R(g),s=score(g),v=verdict(g),h=hist(g);
+  const opts=(l)=>l.map(x=>`<option value="${x.id}"${x.id===g.id?' selected':''}>${esc(x.t)}</option>`).join('');
+  const W=G.filter(isWish),rest=G.filter(x=>!isWish(x));
+  const compat=u.compat||'mid';
+  return head('Analyse')+
+  `<div class="row" style="margin-bottom:14px"><select id="asel" data-in="asel" aria-label="Eintrag wählen" style="flex:1;min-width:14rem"><optgroup label="Wunschliste">${opts(W)}</optgroup><optgroup label="Restlicher Katalog">${opts(rest)}</optgroup></select></div>
+  <div class="stack">
+  <section class="card"><div class="row sp" style="align-items:flex-start"><div class="row" style="align-items:flex-start;flex-wrap:nowrap;min-width:0">${tile(g)}<div style="min-width:0"><h2>${esc(g.t)}</h2><p class="mu sm">${esc(g.pre)} · ${g.ty==='route'?'Strecke':'Fahrzeug / Paket (Typ aus Titel abgeleitet)'} · Release ${dts(g.d)}</p><div style="margin-top:6px">${priceHtml(g)}</div></div></div>
+  <div class="row"><div id="a-ring">${ring(g,true)}</div><div><div style="font:600 1.3rem var(--f-d)" id="a-band">${band(s.s)}</div><div class="mu sm" id="a-conf">Konfidenz ${Math.round(s.conf*100)}%${s.conf<.4?' · zu wenig Daten für eine verlässliche Zahl':''}</div></div></div></div>
+  <div class="row" style="margin-top:10px"><span class="pill ${v.c}" id="a-v">${esc(v.t)}</span>${g.rev?`<span class="pill">Steam: ${esc(revText(g))}</span>`:'<span class="pill">Steam-Reviews: keine oder unbekannt</span>'}</div>
+  ${g.flag?`<div class="card flat sm" style="margin-top:10px;border-color:var(--warn)">⚠ ${esc(g.flag)}</div>`:''}
+  <div class="row" style="margin-top:12px"><a class="btn" href="${esc(steamUrl(g))}" target="_blank" rel="noopener">Auf Steam öffnen</a><button type="button" class="btn g${isOwned(g)?' on':''}" data-act="own" data-id="${g.id}">${isOwned(g)?'✓ Besitze ich':'Besitze ich'}</button><button type="button" class="btn g${isWish(g)?' on':''}" data-act="wish" data-id="${g.id}">${isWish(g)?'✓ Wunschliste':'Auf Wunschliste'}</button><button type="button" class="btn g${S.sel.includes(g.id)?' on':''}" data-act="cmp" data-id="${g.id}">${S.sel.includes(g.id)?'✓ Im Vergleich':'Vergleichen'}</button><button type="button" class="btn g" data-act="fav" data-id="${g.id}">${isFav(g)?'★ Favorit':'☆ Favorit'}</button></div></section>
+  <section class="sec" style="margin-top:6px"><h2>Preis und Sale</h2>${chartBlock(g)}
+  <div class="card row"><label class="row" style="gap:8px">Zielpreis <input type="number" step="0.01" min="0" id="atg" style="width:7rem" value="${u.target??''}" data-in="target" data-id="${g.id}" aria-label="Zielpreis"> €</label><span class="mu sm" id="a-wait">${esc(waitHint(g))}</span></div></section>
+  <section class="sec" style="margin-top:6px"><h2>Bewertung <small>0 bis 10, leer = unbekannt</small></h2><div class="card">${CR.map(c=>critRow(g,c)).join('')}
+  <div class="crit"><div class="h"><b>Landschaft (separat)</b><span class="num" id="rv_scenic">${scenic(g)??'–'}</span></div><div class="ctl"><input type="range" min="0" max="10" step="0.5" value="${scenic(g)??5}" data-in="scenic" data-id="${g.id}" aria-label="Landschaft"><span></span><button type="button" class="btn g sm" data-act="clrscenic" data-id="${g.id}">leer</button></div></div></div></section>
+  ${r?`<section class="sec" style="margin-top:6px"><h2>Recherche <small>Stand 08.10.2026, Werte sind Schätzungen</small></h2><div class="card stack"><p class="sm"><b>Reviews:</b> ${esc(r.ext)}</p><p class="sm ev">${esc(r.ev)}</p><div class="row sm">${r.links.map(l=>`<a href="${esc(l[1])}" target="_blank" rel="noopener">${esc(l[0])}</a>`).join(' · ')}</div></div></section>`:
+  `<section class="sec" style="margin-top:6px"><h2>Recherche</h2><div class="card stack"><p>Für diesen Eintrag liegt noch keine Recherche vor. Bewertungen bleiben leer, der Score wird nicht geraten.</p><p class="mu sm">Lass im Chat recherchieren und die Werte hier eintragen, oder bewerte selbst.</p><div class="row"><button type="button" class="btn g" data-act="copyprompt" data-id="${g.id}">Recherche-Auftrag kopieren</button></div></div></section>`}
+  <section class="sec" style="margin-top:6px"><h2>Dein PC <small>GEEKOM Mini IT13, i9-13900H, Iris Xe</small></h2><div class="card stack"><div class="row"><span class="pill ${compat==='ok'?'good':compat==='bad'?'bad':'warn'}">${compat==='ok'?'Läuft wahrscheinlich gut':compat==='bad'?'Läuft wahrscheinlich nicht':'Grenzwertig (Schätzung)'}</span><select data-in="compat" data-id="${g.id}" aria-label="Kompatibilität"><option value="ok"${compat==='ok'?' selected':''}>Läuft wahrscheinlich gut</option><option value="mid"${compat==='mid'?' selected':''}>Grenzwertig</option><option value="bad"${compat==='bad'?' selected':''}>Läuft wahrscheinlich nicht</option></select></div>
+  <p class="sm"><b>Mindestanforderung:</b> ${esc(SYS.min)}<br><b>Empfohlen:</b> ${esc(SYS.rec)}<br><span class="mu">Quelle: ${esc(SYS.src)}.</span></p>
+  <p class="sm mu">Der Prozessor liegt über der Empfehlung, die integrierte Grafik unter der Mindest-Grafikkarte. Das ist eine Einschätzung ohne Benchmark; FPS-Werte nenne ich nicht. RAM ${esc(S.hw.ram||'unbekannt')} GB, freier Speicher ${esc(S.hw.ssd||'unbekannt')} GB (einstellbar unter Einstellungen).</p></div></section>
+  <section class="sec" style="margin-top:6px"><h2>Sammlung</h2><div class="card stack">${collBlock(g)}</div></section>
+  <section class="sec" style="margin-top:6px"><h2>Persönliches</h2><div class="card stack"><label class="row" style="gap:8px">Geschätzte Spielstunden <input type="number" min="0" step="1" style="width:6rem" value="${u.hours??''}" data-in="hours" data-id="${g.id}" aria-label="Spielstunden"></label><p class="sm mu" id="a-cph">${costPerHour(g)}</p><textarea rows="3" data-in="note" data-id="${g.id}" placeholder="Notizen, Quellen, eigene Beobachtungen" aria-label="Notizen">${esc(u.note||'')}</textarea></div></section>
+  <section class="sec" style="margin-top:6px"><h2>Preisliste</h2><div class="tw"><table><tr><th>Datum</th><th>Preis</th><th>Normalpreis</th><th>Art</th></tr>${h.slice().reverse().map(p=>`<tr><td class="nw num">${dts(p.d)}</td><td class="num">${eur(p.p)}</td><td class="num">${eur(p.o)}</td><td>${p.k==='list'?'Normalpreis zum Release (Annahme)':'gemessen'+(p.src?' ('+esc(p.src)+')':'')}</td></tr>`).join('')}</table></div>
+  <div class="card row"><label class="row" style="gap:6px">Preis heute <input type="number" step="0.01" min="0" id="lp" style="width:7rem" aria-label="Preis heute"> €</label><button type="button" class="btn g" data-act="logprice" data-id="${g.id}">Preis eintragen</button><span class="mu sm">Trägt einen gemessenen Punkt für heute ein.</span></div></section></div>`;
+}
+function collBlock(g){
+  const ow=G.filter(x=>isOwned(x)&&x.id!==g.id),same=ow.filter(x=>x.ty===g.ty).length,tn=g.ty==='route'?'Strecken':'Fahrzeuge und Pakete';
+  return `<p class="sm">${isOwned(g)?'Du besitzt diesen Eintrag bereits.':ow.length?`Du besitzt ${ow.length} andere Einträge, davon ${same} vom gleichen Typ (${tn}).`:'Du hast noch nichts abgehakt. Hake im Katalog an, was du besitzt.'}</p><p class="mu sm">Erweiterungswert (Schätzung nur nach Typ, keine Inhaltsanalyse): ${isOwned(g)?'bereits vorhanden':Math.max(30,100-same*15)+' von 100'}.</p>`;
+}
+function costPerHour(g){const h=hours(g),p=price(g);return h?`Etwa ${eur(p/h)} pro Stunde bei ${h} Stunden (Schätzung).`:'Ohne Stundenangabe keine Kosten pro Stunde.'}
+function critRow(g,c){
+  const k=c[0],val=rating(g,k),u=S.u[g.id]||{},r=R(g),own=u.rat&&k in u.rat,auto=k==='value'&&!own&&!(r&&r.rat&&r.rat[k]!=null)&&val!=null;
+  return `<div class="crit"><div class="h"><b>${c[1]}</b><span class="mu sm">Gewicht ${S.w[k]}${auto?' · aus Stunden berechnet':val!=null&&!own?' · aus Recherche':own?' · von dir':''}</span></div><div class="ctl"><input type="range" min="0" max="10" step="0.5" value="${val??5}" data-in="rat" data-id="${g.id}" data-k="${k}" aria-label="${c[1]}"><span class="num" id="rv_${k}">${val??'–'}</span><button type="button" class="btn g sm" data-act="clrrat" data-id="${g.id}" data-k="${k}">leer</button></div></div>`;
+}
+function liveAnalyse(g){
+  const s=score(g),v=verdict(g);
+  const rg=$('#a-ring');if(rg)rg.innerHTML=ring(g,true);
+  const set=(i,t)=>{const e=$(i);if(e)e.textContent=t};
+  set('#a-band',band(s.s));set('#a-conf','Konfidenz '+Math.round(s.conf*100)+'%'+(s.conf<.4?' · zu wenig Daten für eine verlässliche Zahl':''));
+  const vv=$('#a-v');if(vv){vv.textContent=v.t;vv.className='pill '+v.c}
+  set('#a-wait',waitHint(g));set('#a-cph',costPerHour(g));
+  CR.forEach(c=>set('#rv_'+c[0],rating(g,c[0])??'–'));set('#rv_scenic',scenic(g)??'–');
+  renderBest();
+}
+
+/* ---------- Vergleich ---------- */
+function vVergleich(){
+  const L=S.sel.map(id=>BY.get(id)).filter(Boolean);
+  const others=G.filter(g=>!S.sel.includes(g.id));
+  const pick=`<div class="row" style="margin-bottom:14px"><select id="cadd" aria-label="Eintrag hinzufügen" data-in="cadd" style="flex:1;min-width:14rem"><option value="">Eintrag zum Vergleich hinzufügen…</option><optgroup label="Wunschliste">${others.filter(isWish).map(g=>`<option value="${g.id}">${esc(g.t)}</option>`).join('')}</optgroup><optgroup label="Restlicher Katalog">${others.filter(g=>!isWish(g)).map(g=>`<option value="${g.id}">${esc(g.t)}</option>`).join('')}</optgroup></select><button type="button" class="btn g" data-act="cmpbest">Beste drei wählen</button><button type="button" class="btn g" data-act="cmpclear">Leeren</button></div>`;
+  if(L.length<2)return head('Vergleich','Wähle mindestens zwei Einträge.')+pick+`<div class="card mu">${L.length?esc(shortT(L[0]))+' ist gewählt. ':''}Wähle einen weiteren Eintrag oder drücke „Beste drei wählen“.</div>`;
+  const rows=[['Score',g=>score(g).s,1],['Konfidenz %',g=>Math.round(score(g).conf*100),1],['Preis €',g=>price(g),-1],['Rabatt %',g=>disc(g),1],['Ersparnis €',g=>+(orig(g)-price(g)).toFixed(2),1],...CR.map(c=>[c[1],g=>rating(g,c[0]),1]),['Landschaft',g=>scenic(g),1]];
+  const body=rows.map(([n,fn,d])=>{const v=L.map(fn),ok=v.filter(x=>x!=null),b=ok.length>1&&new Set(ok).size>1?(d>0?Math.max(...ok):Math.min(...ok)):null;return `<tr><td class="nw"><b>${n}</b></td>${v.map(x=>`<td class="num${x!=null&&x===b?' win':''}">${x??'unbekannt'}</td>`).join('')}</tr>`}).join('');
+  const a=L[0],b=L[1];
+  return head('Vergleich')+pick+`<div class="tw"><table><tr><th></th>${L.map(g=>`<th style="white-space:normal;min-width:9rem">${esc(g.t)}<br><button type="button" class="btn g sm" data-act="cmp" data-id="${g.id}">entfernen</button></th>`).join('')}</tr>${body}</table></div>
+  <p class="mu sm" style="margin-top:8px">Grün = beste Spalte der Zeile. „Unbekannt“ wird nicht abgewertet.</p>
+  <div class="sec"><h2>Was gewinne und verliere ich?</h2><div class="card stack">${gainLose(a,b)}<div class="row"><button type="button" class="btn g sm" data-act="cmpswap">Reihenfolge tauschen</button></div></div></div>`;
+}
+function gainLose(a,b){
+  const sa=score(a).s,sb=score(b).s,pd=price(a)-price(b);
+  let li=[];
+  if(sa!=null&&sb!=null)li.push(`Score: ${sa} gegen ${sb} (${sa-sb>0?'+':''}${sa-sb}).`);else li.push('Mindestens einer der beiden ist nicht bewertet, ein Score-Vergleich ist nicht möglich.');
+  li.push(`Preis: ${eur(price(a))} gegen ${eur(price(b))} (${pd>0?'+':''}${eur(pd).replace(' €','')} €).`);
+  CR.forEach(c=>{const x=rating(a,c[0]),y=rating(b,c[0]);if(x!=null&&y!=null&&x!==y)li.push(`${c[1]}: ${x>y?'Gewinn':'Verlust'} (${x} gegen ${y}).`)});
+  if(a.ty!==b.ty)li.push('Unterschiedlicher Typ (Strecke gegen Fahrzeug): kaum überlappender Inhalt.');
+  if(sa!=null&&sb!=null&&sa<sb&&price(a)<price(b))li.push(`${a.t} ist trotz niedrigerem Score günstiger und kann bei knappem Budget die bessere Wahl sein.`);
+  return `<p><b>${esc(a.t)}</b> statt <b>${esc(b.t)}</b>:</p><ul style="margin:0;padding-left:1.2rem">${li.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+}
+
+/* ---------- Rankings ---------- */
+function box(title,items,fmt,note){
+  return `<section class="card stack"><h3>${title}</h3>${items.length?`<ol style="margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:6px">${items.slice(0,8).map(g=>`<li><button type="button" class="tt" style="background:none;border:0;padding:0;cursor:pointer;color:var(--fg);text-align:left" data-act="open" data-id="${g.id}">${esc(shortT(g))}</button> <span class="num mu">${fmt(g)}</span></li>`).join('')}</ol>`:'<p class="mu sm">Noch zu wenige Bewertungen.</p>'}${note?`<p class="mu sm">${note}</p>`:''}</section>`;
+}
+function vRank(){
+  const W=G.filter(g=>!isOwned(g)),Rt=W.filter(rated),srt=(l,f)=>l.slice().sort((a,b)=>f(b)-f(a));
+  const sc=g=>score(g).s;
+  return head('Rankings','Bewertete Listen folgen deinen Reglern. Preislisten nutzen nur gemessene Preisdaten.')+
+  `<div class="grid">
+  ${box('Beste insgesamt',srt(Rt,sc),g=>sc(g))}
+  ${box('Bestes Fahrgasterlebnis',srt(W.filter(g=>rating(g,'pax')!=null),g=>rating(g,'pax')),g=>rating(g,'pax'),'Halte pro Fahrt sind nicht belegt, die Werte sind Schätzungen.')}
+  ${box('Schönste Landschaft',srt(W.filter(g=>scenic(g)!=null),scenic),g=>scenic(g))}
+  ${box('Bester Wert (Score je Euro)',srt(Rt.filter(g=>price(g)>0),g=>sc(g)/price(g)),g=>(sc(g)/price(g)).toFixed(1)+' / €')}
+  ${box('Beste bewertete unter 10 €',srt(Rt.filter(g=>price(g)<10),sc),g=>sc(g)+' · '+eur(price(g)))}
+  ${box('Beste bewertete unter 20 €',srt(Rt.filter(g=>price(g)<20),sc),g=>sc(g)+' · '+eur(price(g)))}
+  ${box('Beste bewertete unter 30 €',srt(Rt.filter(g=>price(g)<30),sc),g=>sc(g)+' · '+eur(price(g)))}
+  ${box('Größter Rabatt (ganzer Katalog)',srt(W.filter(g=>disc(g)>0),g=>disc(g)*1000+orig(g)-price(g)),g=>'−'+disc(g)+'% · '+eur(price(g)))}
+  ${box('Größte Ersparnis in Euro',srt(W.filter(g=>disc(g)>0),g=>orig(g)-price(g)),g=>eur(orig(g)-price(g))+' · jetzt '+eur(price(g)))}
+  ${box('Günstigste reduzierte Strecken',W.filter(g=>g.ty==='route'&&disc(g)>=50).sort((a,b)=>price(a)-price(b)),g=>eur(price(g))+' · −'+disc(g)+'%','Strecken ab 50 % Rabatt, aus dem Titel abgeleiteter Typ.')}
+  ${box('Günstigste reduzierte Fahrzeuge & Pakete',W.filter(g=>g.ty==='other'&&disc(g)>=50).sort((a,b)=>price(a)-price(b)),g=>eur(price(g))+' · −'+disc(g)+'%')}
+  ${box('Noch ohne Rabatt (auf Sale warten?)',W.filter(g=>disc(g)===0&&price(g)>0).sort((a,b)=>price(b)-price(a)),g=>eur(price(g)),'Nächster bestätigter Sale: Winter Sale ab 17.12.2026.')}
+  </div>`;
+}
+
+/* ---------- Preise ---------- */
+function vPreise(){
+  const W=G.filter(isWish),cur=S.cur&&BY.get(S.cur)||W[0]||G[0];
+  const opts=l=>l.map(x=>`<option value="${x.id}"${x.id===cur.id?' selected':''}>${esc(x.t)}</option>`).join('');
+  return head('Preise','Verlauf, Sale-Fahrplan und Zielpreise.')+
+  `<div class="stack">${boardHtml()}
+  <div class="row"><select id="psel" data-in="psel" aria-label="Eintrag wählen" style="flex:1;min-width:14rem"><optgroup label="Wunschliste">${opts(W)}</optgroup><optgroup label="Restlicher Katalog">${opts(G.filter(x=>!isWish(x)))}</optgroup></select></div>
+  <div id="pchart" class="stack"></div>
+  <div class="sec" style="margin-top:6px"><h2>Wunschliste im Überblick</h2><div class="tw"><table><tr><th>Titel</th><th>Preis</th><th>Normal</th><th>Rabatt</th><th>Ziel</th><th>Status</th></tr>${W.map(g=>{const t=(S.u[g.id]||{}).target;return `<tr><td><button type="button" class="tt" style="background:none;border:0;padding:0;cursor:pointer;color:var(--fg);text-align:left" data-act="pc" data-id="${g.id}">${esc(g.t)}</button></td><td class="num nw">${eur(price(g))}</td><td class="num nw">${eur(orig(g))}</td><td class="num">${disc(g)}%</td><td class="num">${t??'–'}</td><td class="nw">${t!=null?(price(g)<=t?'<span class="pill good">erreicht</span>':'<span class="pill">wartet</span>'):'–'}</td></tr>`}).join('')}</table></div></div></div>`;
+}
+function afterPreise(){const g=BY.get(S.cur)||G.filter(isWish)[0]||G[0];$('#pchart').innerHTML=chartBlock(g)}
+
+/* ---------- Einstellungen ---------- */
+function vSettings(){
+  return head('Einstellungen')+`<div class="stack">${localSettings()}
+  <section class="card stack"><h3>Dein PC</h3><p class="mu sm">GEEKOM Mini IT13 mit Intel Core i9-13900H und Iris Xe. RAM und freier Speicher sind nicht bekannt, trag sie hier ein.</p><div class="row"><label class="row" style="gap:6px">RAM <input type="number" min="0" style="width:6rem" value="${esc(S.hw.ram)}" data-in="hw" data-k="ram"> GB</label><label class="row" style="gap:6px">Freier Speicher <input type="number" min="0" style="width:6rem" value="${esc(S.hw.ssd)}" data-in="hw" data-k="ssd"> GB</label></div></section>
+  <section class="card stack"><h3>Export</h3><div class="row"><button type="button" class="btn" data-act="exp" data-f="csv">Katalog als CSV</button><button type="button" class="btn g" data-act="exp" data-f="json">Alles als JSON</button></div><div id="expout"></div></section>
+  <section class="card stack"><h3>Daten und Quellen</h3><p class="sm">Preise, Release-Daten und Reviews stammen aus Steam (Region Deutschland, Euro), abgerufen am ${dts(ASOF)}. Bewertungen der sechs Wunschlisten-Einträge sind Schätzungen aus Beschreibungen, PlayStation-Wertungen und Testberichten. Alle anderen Bewertungen sind leer. Cover-Bilder zeigt diese Ansicht nicht, weil nur Bilder aus der Seite selbst geladen werden dürfen.</p></section>
+  <section class="card stack"><h3>Zurücksetzen</h3><p class="mu sm">Löscht deine Haken, Bewertungen, Zielpreise und Regler in diesem Browser.</p><div class="row"><button type="button" class="btn g" data-act="reset1" id="rs1">Zurücksetzen…</button><button type="button" class="btn g" data-act="reset2" id="rs2" hidden style="border-color:var(--bad);color:var(--bad)">Ja, alles löschen</button></div></section></div>`;
+}
+
+/* ---------- Aktualisieren: Einfügen und Auswerten ---------- */
+const norm=s=>s.toLowerCase().replace(/[®™]/g,'').replace(/&amp;/g,'&').replace(/[–—]/g,'-').replace(/ /g,' ').replace(/\s+/g,' ').trim();
+const num=s=>parseFloat(s.replace(/\./g,'').replace(',','.'));
+function parsePaste(txt,opt){
+  const T=norm(txt),rep={upd:[],same:[],bad:[],neu:[],miss:0};
+  const idx=[];
+  G.forEach(g=>{const key=norm(g.pre==='TSW7'?'train sim world 7: '+g.t:g.pre==='TSW6'?'train sim world 6: '+g.t:g.t);const p=T.indexOf(key);if(p>=0)idx.push({g,p,len:key.length})});
+  // neue Titel anhand "Release Date"-Zeilen erkennen
+  const re=/(train sim world[^\n]{5,160}?)\s*(?:release date|erscheinungsdatum)/g;let m;const known=new Set(idx.map(x=>x.p));
+  const raw=txt.replace(/[®™]/g,'').replace(/ /g,' ');
+  const re2=/(Train Sim World\s*\d?:[^\n]{5,160})\n+\s*(?:Release Date|Erscheinungsdatum)/g;
+  const newOnes=[];while((m=re2.exec(raw))){const t=m[1].trim();const key=norm(t);if(!idx.find(x=>key.includes(norm(x.g.t))||norm(x.g.t).includes(key.replace(/^train sim world \d?: /,'')))&&!newOnes.includes(t))newOnes.push(t)}
+  newOnes.forEach(t=>{const p=T.indexOf(norm(t));if(p>=0){const g={id:-(Date.now()%900000+idx.length),t:t.replace(/^Train Sim World\s*\d?:\s*/,''),pre:'TSW7',d:'',ty:/Route Add-On|Bahnstrecke|Corridor|Line:/i.test(t)&&!/Loco|EMU|DMU|Pack/i.test(t)?'route':'other',rev:'',flag:'',base:[],wish0:true,__new:true};idx.push({g,p,len:norm(t).length})}});
+  idx.sort((a,b)=>a.p-b.p);
+  const today=todayISO();
+  idx.forEach((x,i)=>{
+    const seg=T.slice(x.p+x.len,Math.min(i+1<idx.length?idx[i+1].p:T.length,x.p+x.len+420));
+    if(/\$\s?\d/.test(seg)&&!/€|eur/.test(seg)){rep.bad.push(x.g.t+' (USD, übersprungen)');return}
+    const am=[...seg.matchAll(/(\d{1,3}(?:\.\d{3})*,\d{2})\s?(?:€|eur)|(?:€|eur)\s?(\d{1,3}(?:\.\d{3})*,\d{2})/g)].map(a=>num(a[1]||a[2]));
+    const dm=seg.match(/-\s?(\d{1,2})\s?%/),dp=dm?+dm[1]:0;
+    let p,o;
+    if(!am.length){if(/free|kostenlos/.test(seg)){p=o=0}else{rep.bad.push(x.g.t+' (kein Preis gefunden)');return}}
+    else if(dp){if(am.length<2){rep.bad.push(x.g.t+' (Rabatt ohne Normalpreis)');return}o=am[0];p=am[1];if(Math.abs(Math.round((1-p/o)*100)-dp)>1){rep.bad.push(x.g.t+' (Rabatt passt nicht zu den Preisen)');return}}
+    else{p=o=am[0]}
+    let g=x.g;
+    if(g.__new){delete g.__new;S.extra.push({id:g.id,t:g.t,pre:g.pre,d:'',ty:g.ty,rev:'',wish:1,h:[]});buildModel();g=BY.get(g.id);rep.neu.push(g.t)}
+    const c=curPt(g),changed=c.p==null||Math.abs(c.p-p)>.004||Math.abs((c.o||0)-o)>.004;
+    const u=U(g.id);u.hist=(u.hist||[]).filter(e=>!(e.d===today&&e.k==='obs'));
+    u.hist.push({d:today,p,o,k:'obs',src:'eingefügt'});
+    if(opt.wish)u.wish=true;
+    (changed?rep.upd:rep.same).push(g.t+(changed?`: ${eur(c.p)} → ${eur(p)}`:''));
+  });
+  if(opt.prune){const f=new Set(idx.map(x=>x.g.id));G.filter(isWish).forEach(g=>{if(!f.has(g.id)){U(g.id).wish=false;rep.miss++}})}
+  S.refreshed=new Date().toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'});save();return rep;
+}
+function openSheet(h){$('#sheet').innerHTML=h;$('#shade').hidden=false}
+function closeSheet(){$('#shade').hidden=true}
+function applyObs(g,p,o,src,date,rep){
+  const c=curPt(g),changed=c.p==null||Math.abs(c.p-p)>.004||Math.abs((c.o||0)-o)>.004;
+  const u=U(g.id);u.hist=(u.hist||[]).filter(e=>!(e.d===date&&e.k==='obs'));
+  u.hist.push({d:date,p,o,k:'obs',src});
+  (changed?rep.upd:rep.same).push(g.t+(changed?`: ${eur(c.p)} → ${eur(p)}`:''));
+}
+function parseJson(j,opt){
+  const rep={upd:[],same:[],bad:[],neu:[],miss:0};
+  if(!j||j.swa!==1||!j.preise||typeof j.preise!=='object')throw new Error('Das ist keine Datei des Update-Skripts.');
+  const today=todayISO(),date=/^\d{4}-\d{2}-\d{2}$/.test(j.stand||'')&&j.stand<=today?j.stand:today;
+  (j.neu||[]).forEach(n=>{const id=+n.id;if(id>0&&n.t&&!BY.has(id)){const t=String(n.t);S.extra.push({id,t,pre:String(n.pre||'Steam'),d:'',ty:/Route Add-On|Bahnstrecke|Corridor|Line:/i.test(t)&&!/Loco|EMU|DMU|Pack/i.test(t)?'route':'other',rev:'',wish:1,h:[]});rep.neu.push(t)}});
+  if(rep.neu.length)buildModel();
+  Object.keys(j.preise).forEach(k=>{const g=BY.get(+k),e=j.preise[k]||{};if(!g)return;const p=+e.p,o=+e.o;if(!(p>=0)||!(o>=p-.004)){rep.bad.push(g.t+' (Preise unplausibel)');return}applyObs(g,p,o,'API',date,rep)});
+  if(Array.isArray(j.wunschliste)&&j.wunschliste.length){
+    const ws=new Set(j.wunschliste.map(Number));
+    G.forEach(g=>{const w=ws.has(g.id);if(!w&&isWish(g))rep.miss++;U(g.id).wish=w});
+  }
+  S.refreshed=new Date().toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'});save();return rep;
+}
+const UPDATE_SCRIPT=String.raw`// Steam Wishlist Analyzer: Preise und Wunschliste abrufen (Node.js 18 oder neuer)
+// Den API-Schluessel nur als Umgebungsvariable setzen, nie in eine Webseite tippen.
+//   Windows PowerShell:  $env:STEAM_API_KEY="DEIN_SCHLUESSEL"; node steam-update.mjs
+//   macOS / Linux:       STEAM_API_KEY=DEIN_SCHLUESSEL node steam-update.mjs
+import { writeFileSync } from "node:fs";
+const KEY = process.env.STEAM_API_KEY || "";
+const STEAMID = process.env.STEAMID64 || "__STEAMID__";
+const CC = "de";
+const IDS = [__IDS__];
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+async function getJson(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error("HTTP " + r.status + " bei " + url.split("?")[0]);
+  return r.json();
+}
+async function wishlist() {
+  let url = "https://api.steampowered.com/IWishlistService/GetWishlist/v1/?steamid=" + STEAMID;
+  if (KEY) url += "&key=" + encodeURIComponent(KEY);
+  const j = await getJson(url);
+  const items = (j.response && j.response.items) || [];
+  if (!items.length) console.warn("Wunschliste leer oder unerwartetes Format: " + JSON.stringify(j).slice(0, 200));
+  return items.map((x) => x.appid);
+}
+function details(ids, filters) {
+  return getJson("https://store.steampowered.com/api/appdetails?appids=" + ids.join(",") + "&cc=" + CC + "&l=english&filters=" + filters);
+}
+const prices = {};
+for (let i = 0; i < IDS.length; i += 10) {
+  const chunk = IDS.slice(i, i + 10);
+  let j = null;
+  try { j = await details(chunk, "price_overview"); } catch (e) { console.warn(e.message); }
+  for (const id of chunk) {
+    const e = j && j[id];
+    const p = e && e.success && e.data && e.data.price_overview;
+    if (p && p.currency === "EUR") prices[id] = { p: p.final / 100, o: p.initial / 100 };
+  }
+  await sleep(1500);
+}
+const wl = await wishlist();
+const neu = [];
+for (const id of wl) {
+  if (IDS.includes(id)) continue;
+  const j = await details([id], "basic,price_overview");
+  const e = j && j[id];
+  if (!(e && e.success && e.data)) continue;
+  const name = String(e.data.name || "");
+  const m = name.match(/^Train Sim World\S* ?(\d):\s*(.*)$/);
+  neu.push({ id, t: m ? m[2] : name, pre: m ? "TSW" + m[1] : "Steam" });
+  const p = e.data.price_overview;
+  if (p && p.currency === "EUR") prices[id] = { p: p.final / 100, o: p.initial / 100 };
+  await sleep(1500);
+}
+writeFileSync("steam-update.json", JSON.stringify({ swa: 1, stand: new Date().toISOString().slice(0, 10), steamid: STEAMID, wunschliste: wl, preise: prices, neu }, null, 1));
+console.log("Fertig: " + Object.keys(prices).length + " Preise, " + wl.length + " Wunschlistenplaetze, " + neu.length + " neue Eintraege.");
+console.log("Oeffne steam-update.json, kopiere den ganzen Inhalt und fuege ihn im Analyzer unter Aktualisieren ein.");
+`;
+const makeScript=()=>UPDATE_SCRIPT.replace('__STEAMID__',STEAMID).replace('__IDS__',G.filter(g=>g.id>0).map(g=>g.id).join(', '));
+function refreshSheet(){
+  if(SRV.on)return localSheet();
+  const prompt='Aktualisiere meinen Steam Wishlist Analyzer: lies meine Wunschliste ('+WL_URL+') und die Preise aller TSW7-DLC neu aus, trage neue Preise und Rabatte ein und recherchiere Bewertungen zu neuen oder noch unbewerteten Einträgen.';
+  openSheet(`<div class="row sp"><h2>Aktualisieren</h2><button type="button" class="btn g sm" data-act="close">Schließen</button></div>
+  <p class="mu sm" style="margin:6px 0 12px">Stand der Daten: Steam Deutschland (Euro), abgerufen am ${dts(ASOF)}${S.refreshed?'. Deine letzte Aktualisierung: '+esc(S.refreshed):''}. Diese Seite darf Steam nicht selbst abrufen. Du holst die Daten also auf einem der beiden Wege unten und fügst das Ergebnis hier ein.</p>
+  <div class="card flat stack"><b>1. Daten einfügen</b>
+  <textarea id="paste" rows="5" placeholder="Steam-Seitentext oder Inhalt von steam-update.json" aria-label="Eingefügte Daten"></textarea>
+  <div class="row"><label class="row sm" style="gap:6px">Quelle des Textes <select id="psrc" aria-label="Quelle"><option value="wish">Wunschliste (Steam-Seite)</option><option value="dlc">DLC-Liste (nur Preise)</option></select></label></div>
+  <p class="sm mu">Die Wunschliste zeigt danach genau die Einträge aus der Skript-Ausgabe.</p>
+  <div class="row"><button type="button" class="btn" data-act="parse">Einlesen</button></div><div id="prep" class="sm"></div></div>
+  <details class="card flat" style="margin-top:12px" open><summary><b>Weg A: Steam-Seite kopieren</b> <span class="mu sm">ohne Schlüssel</span></summary>
+  <ol class="sm stack" style="margin:8px 0 0;padding-left:1.2rem;gap:4px"><li>Öffne deine <a href="${WL_URL}" target="_blank" rel="noopener">Wunschliste</a> oder die <a href="${DLC_URL}" target="_blank" rel="noopener">DLC-Liste</a> auf Steam.</li><li>Markiere die ganze Seite (Strg+A bzw. Cmd+A) und kopiere sie.</li><li>Füge sie oben ein, wähle die Quelle und drücke „Einlesen“.</li></ol></details>
+  <details class="card flat" style="margin-top:12px"><summary><b>Weg B: Steam-API-Schlüssel</b> <span class="mu sm">Skript auf deinem Rechner</span></summary>
+  <div class="stack sm" style="margin-top:8px">
+  <p>Den Schlüssel bekommst du kostenlos unter <a href="https://steamcommunity.com/dev/apikey" target="_blank" rel="noopener">steamcommunity.com/dev/apikey</a>. Trag ihn nicht in diese Seite ein: Sie kann Steam ohnehin nicht abrufen, und ein Schlüssel gehört nicht in eine Webseite. Er bleibt auf deinem Rechner und wird nur vom Skript benutzt.</p>
+  <ol style="margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:4px"><li>Installiere <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a> (Version 18 oder neuer).</li><li>Kopiere das Skript und speichere es als <code>steam-update.mjs</code>.</li><li>Öffne ein Terminal im selben Ordner und führe es mit deinem Schlüssel aus (Befehle stehen im Skript oben).</li><li>Öffne die erzeugte Datei <code>steam-update.json</code>, kopiere den ganzen Inhalt und füge ihn oben ein.</li></ol>
+  <textarea readonly rows="7" id="scr" aria-label="Update-Skript" style="font-family:var(--f-m);font-size:.74rem">${esc(makeScript())}</textarea>
+  <div class="row"><button type="button" class="btn g" data-act="copy" data-t="scr">Skript kopieren</button></div>
+  <p class="mu">Geprüft habe ich am ${dts(ASOF)} nur den Preisabruf (Steam appdetails, Euro). Die Wunschlisten-Schnittstelle (IWishlistService) konnte ich von hier aus nicht aufrufen; ihr Antwortformat und ob sie den Schlüssel braucht, ist deshalb nicht bestätigt. Das Skript meldet, wenn die Antwort anders aussieht. Deine SteamID64 (${STEAMID}) stammt aus deinem öffentlichen Profil.</p></div></details>
+  <div class="card flat stack" style="margin-top:12px"><b>Neue Bewertungen</b>
+  <p class="sm mu">Echte Recherche im Web läuft im Chat. Kopiere diesen Auftrag dorthin. Die Auswertung unten rechnet nur mit den Daten dieser Seite.</p>
+  <textarea readonly rows="3" id="pr" aria-label="Auftrag für den Chat">${esc(prompt)}</textarea>
+  <div class="row"><button type="button" class="btn g" data-act="copy" data-t="pr">Auftrag kopieren</button><button type="button" class="btn" data-act="ask">Mit Claude auswerten</button></div><div id="aout" class="sm"></div></div>`);
+}
+async function askClaude(){
+  const o=$('#aout');o.textContent='Claude wertet aus…';
+  try{
+    const sm=window.claude&&window.claude.use?await window.claude.use('sample'):null;
+    if(!sm){o.textContent='Die Claude-Auswertung ist in dieser Ansicht nicht verfügbar.';return}
+    const p=picks(),pack=x=>({id:x.g.id,titel:x.g.t,preis:price(x.g),normal:orig(x.g),rabatt:disc(x.g),score:score(x.g).s,konfidenz:+score(x.g).conf.toFixed(2),typ:x.g.ty});
+    const data={bewertet:p.rated.slice(0,10).map(pack),angebote:p.deals.slice(0,15).map(pack),regler:S.buy,gewichte:S.w,besitz:G.filter(isOwned).map(g=>g.t)};
+    const r=await sm.json('Du hilfst bei der Kaufentscheidung für Train-Sim-World-7-DLC. Der Nutzer mag Bahnsimulatoren, bevorzugt viele Bahnhofshalte, Landschaft ist ebenfalls wichtig. Nutze NUR diese Daten, erfinde nichts, du hast kein Internet und keine Bewertungen für die Angebote. Antworte nur mit JSON: {"pick":{"id":Zahl,"warum":"höchstens 2 Sätze"},"reihenfolge":[ids, beste zuerst, höchstens 8],"hinweis":"1 Satz zu fehlenden Daten"}. Daten: '+JSON.stringify(data),{cache:false});
+    const g=r&&r.pick&&BY.get(r.pick.id);
+    o.innerHTML=(g?`<div class="card"><b>Empfehlung: ${esc(g.t)}</b><p>${esc(r.pick.warum)}</p></div>`:'')+((r.reihenfolge||[]).length?'<ol>'+r.reihenfolge.map(id=>BY.get(id)?`<li>${esc(BY.get(id).t)}</li>`:'').join('')+'</ol>':'')+(r.hinweis?`<p class="mu">${esc(r.hinweis)}</p>`:'');
+  }catch(e){o.textContent='Auswertung nicht möglich: '+((e&&(e.message||e.code))||e)}
+}
+async function copyText(id){const el=$('#'+id);try{await navigator.clipboard.writeText(el.value);toast('Kopiert')}catch(e){el.select();toast('Zum Kopieren markiert')}}
+
+/* ---------- Export ---------- */
+async function doExport(f){
+  const rows=G.map(g=>({appid:g.id,titel:g.pre+': '+g.t,typ:g.ty,release:g.d,preis_eur:price(g),normalpreis_eur:orig(g),rabatt_prozent:disc(g),score:score(g).s,konfidenz:+score(g).conf.toFixed(2),wunschliste:isWish(g),besitz:isOwned(g),zielpreis:(S.u[g.id]||{}).target??''}));
+  let data,name;
+  if(f==='json'){data=JSON.stringify({stand:ASOF,einstellungen:{gewichte:S.w,kauf:S.buy,pc:S.hw},nutzer:S.u,zusatz:S.extra,katalog:rows},null,1);name='wishlist-analyzer.json'}
+  else{const h=Object.keys(rows[0]);data=[h.join(';'),...rows.map(r=>h.map(k=>'"'+String(r[k]??'').replace(/"/g,'""')+'"').join(';'))].join('\n');name='wishlist-katalog.csv'}
+  try{const d=window.claude&&window.claude.use?await window.claude.use('downloads'):null;if(!d)throw 0;await d.save({filename:name,data});toast('Export bereit')}
+  catch(e){if(e&&e.code==='declined')return;if(!window.claude){try{const bl=new Blob([(f==='csv'?'\ufeff':'')+data],{type:'text/plain;charset=utf-8'}),an=document.createElement('a');an.href=URL.createObjectURL(bl);an.download=name;document.body.appendChild(an);an.click();an.remove();setTimeout(()=>URL.revokeObjectURL(an.href),2000);toast('Download gestartet');return}catch(e2){}}$('#expout').innerHTML=`<p class="mu sm">Der Download ist hier nicht verfügbar. Kopiere den Text stattdessen:</p><textarea rows="6" id="exptxt" readonly>${esc(data)}</textarea><button type="button" class="btn g sm" data-act="copy" data-t="exptxt">Kopieren</button>`}
+}
+
+/* ---------- Empfehlung (feste Regeln, keine KI) ---------- */
+const GENW=new Set(['route','add-on','addon','loco','emu','dmu','pack','line','main','the','and','of','train','sim','world','high','speed','livery','collection','edition','class','express','remastered','corridor','branches','network','subdivision','bahnstrecke','expert','gameplay','heritage']);
+const toks=t=>t.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g,'').split(/[^a-z0-9]+/).filter(w=>(w.length>2&&!GENW.has(w)));
+const REG=[['Deutschland/Österreich/Schweiz',/Bahnstrecke|Mittenwald|Salzburg|Rosenheim|Rhein|Nürnberg|Nuremberg|Würzburg|München|Munich|Hamburg|Hannover|Dresden|Köln|Innsbruck|Garmisch|Wien|Vienna|Zürich|Zurich|Schweiz|Koblenz|Mainz|Kassel|Ingolstadt|Schnellfahrstrecke|\bICE\b|\bDB\b|ÖBB|\bBR \d{3}\b/i],
+ ['Großbritannien',/London|Brighton|Fife|Scotland|Edinburgh|Manchester|Leeds|Birmingham|Great Western|West Coast|East Coast|Avanti|TransPennine|Peterborough|Doncaster|Blackpool|Preston|Liverpool|Overground|Underground|ScotRail|LNER|GWR|Class \d{2,3}\b|Crewe|Carlisle|Trent Valley/i],
+ ['USA/Kanada',/Corridor|Subdivision|Norfolk Southern|CSX|Amtrak|Los Angeles|San Bernardino|Boston|Providence|New York|Long Beach|LIRR|Oakville|Canadian|Metra|SEPTA|California|Pennsylvania|Cajon|Antelope|Union Pacific|BNSF|Metro-North|Chicago|Hempstead/i]];
+const region=t=>{for(const [n,re] of REG)if(re.test(t))return n;return null};
+const NEEDS={4680150:{re:/West Coast Main Line: London Euston/i,txt:'Strecke London Euston – Milton Keynes'},4714930:{id:4680800,txt:'Strecke Nürnberg – Würzburg'}};
+function needInfo(g){
+  const n=NEEDS[g.id];
+  if(n){const r=n.id?BY.get(n.id):G.find(x=>x.ty==='route'&&n.re.test(x.t));return {kind:'needs',txt:n.txt,route:r||null,ok:!!(r&&isOwned(r))}}
+  for(const id in NEEDS){const n2=NEEDS[id],v=BY.get(+id);if(v&&(isOwned(v)||isWish(v))&&(n2.id?n2.id===g.id:n2.re.test(g.t)&&g.ty==='route'))return {kind:'hosts',veh:v,own:isOwned(v),ok:true}}
+  return {kind:null,ok:false};
+}
+function affinity(g){
+  const ref=G.filter(x=>x.id!==g.id&&(isOwned(x)||isWish(x))),w=x=>isOwned(x)?1:.5;
+  const why=[];
+  if(!ref.length)return {v:50,why:['Noch kein Besitz und keine Wunschliste bekannt: Passung ist neutral.'],known:false};
+  const rg=region(g.t);let tot=0,same=0;
+  ref.forEach(x=>{tot+=w(x);if(rg&&region(x.t)===rg)same+=w(x)});
+  const share=rg&&tot?same/tot:0;
+  const mine=new Set(toks(g.t));let shared=0;ref.forEach(x=>toks(x.t).forEach(t=>{if(mine.has(t))shared+=w(x)}));
+  const nd=needInfo(g);
+  const v=Math.round(100*(.55*share+.2*Math.min(1,shared/2)+.25*(nd.ok?1:0)));
+  if(rg&&share>0)why.push(`Region ${rg} passt zu ${Math.round(share*100)} % deines Besitzes und deiner Wunschliste (Region aus dem Titel abgeleitet).`);
+  else if(rg)why.push(`Region ${rg} kommt in deinem Besitz und deiner Wunschliste bisher nicht vor.`);
+  if(nd.kind==='needs'){if(nd.ok)why.push(`Du besitzt die nötige ${nd.txt}.`);else why.push(`Braucht für das volle Erlebnis die ${nd.txt}${nd.route?` (im Katalog: ${eur(price(nd.route))})`:''}. Die hast du noch nicht.`)}
+  if(nd.kind==='hosts')why.push(`Passt zu ${nd.veh.t}, das ${nd.own?'du besitzt':'auf deiner Wunschliste steht'}.`);
+  if(shared>0)why.push('Gemeinsame Orts- oder Linienbegriffe mit deinem Besitz oder deiner Wunschliste.');
+  return {v,why,known:true,need:nd};
+}
+function recs(){
+  const b=S.buy,mx=b.max>=60?Infinity:b.max,wd=b.wd/100,wDeal=.1+.3*wd,wAff=.25,wQ=1-wDeal-wAff;
+  const pool=G.filter(g=>!isOwned(g)&&price(g)!=null&&price(g)>0&&price(g)<=mx&&(!b.ty||g.ty===b.ty)&&(b.scope==='all'||isWish(g)));
+  return pool.map(g=>{
+    const s=score(g),isR=rated(g),q=isR?s.s:50,a=affinity(g),d=disc(g);
+    let value=wQ*q+wAff*a.v+wDeal*d;
+    if(a.need&&a.need.kind==='needs'&&!a.need.ok)value-=8;
+    const why=[];
+    why.push(isR?`Score ${s.s} nach deinen Gewichten (Konfidenz ${Math.round(s.conf*100)} %, Schätzung).`:'Noch nicht bewertet: Der Platz beruht nur auf Passung und Angebot.');
+    if(d>0)why.push(`−${d} % (${eur(price(g))} statt ${eur(orig(g))}).`);else why.push(`Aktuell kein Rabatt (${eur(price(g))}).`);
+    why.push(...a.why);
+    return {g,value,q:isR?s.s:null,aff:a.v,deal:d,why,conf:s.conf,rated:isR};
+  }).sort((x,y)=>y.value-x.value);
+}
+/* ---------- Empfehlung: Ansicht ---------- */
+const TRAINRX=/train|rail|zug|bahn|trainz|run 8|open rails|loco/i;
+function ownSummary(){
+  const owned=G.filter(isOwned),auto=owned.filter(g=>SRV.owned.has(g.id)&&!(S.u[g.id]&&S.u[g.id].owned===true)).length,hand=owned.length-auto;
+  const tg=SRV.games.filter(x=>TRAINRX.test(x.name));
+  const base=SRV.on&&SRV.games.length?SRV.owned.has(4678800):null;
+  return {owned,auto,hand,tg,base};
+}
+function bar(label,v,hint){return `<div class="sl" style="grid-template-columns:7.5rem minmax(0,1fr) 2.6rem"><span class="sm mu">${label}</span><div class="bar"><i style="width:${Math.max(2,Math.min(100,v))}%"></i></div><span class="v">${Math.round(v)}</span></div>`}
+function vEmpf(){
+  const R=recs(),o=ownSummary(),top=R[0];
+  const srvLine=SRV.on
+    ?`Von Steam erkannt: ${o.auto} Einträge aus dem Katalog${SRV.games.length?`, ${SRV.games.length} Spiele im Konto`:' (Spieleliste noch nicht gelesen, Schlüssel nötig)'}. Selbst abgehakt: ${o.hand}.`
+    :`Ohne die lokale App kennt diese Seite nur deine Haken im Katalog (${o.owned.length} abgehakt).`;
+  const baseWarn=o.base===false?`<div class="card flat sm" style="border-color:var(--warn)">⚠ Train Sim World 7 steht nicht in der erkannten Spieleliste. DLC laufen nur mit dem Basisspiel.</div>`:'';
+  const tg=o.tg.length?`<p class="sm mu">Bahn-Spiele in deinem Konto: ${o.tg.slice(0,8).map(x=>esc(x.name)+(x.hours?' ('+x.hours+' h)':'')).join(', ')}${o.tg.length>8?' …':''}</p>`:'';
+  const pick=top?`<div class="grid">${card(top.g)}<div class="card stack"><div class="lbl">Warum diese Empfehlung</div>
+    ${bar('Qualität',top.q??50)}${bar('Passung',top.aff)}${bar('Angebot',top.deal)}
+    <ul class="sm" style="margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:4px">${top.why.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+    <p class="mu sm">${esc(waitHint(top.g))}</p>
+    <div class="row"><button type="button" class="btn g sm" data-act="modsfor" data-id="${top.g.id}">Passende Mods suchen</button></div></div></div>`:`<div class="card mu">Keine Kandidaten in deinen Regler-Grenzen. Erhöhe den Höchstpreis oder stelle den Umfang auf „Ganzer Katalog“.</div>`;
+  const more=R.slice(1,7).map(x=>`<div class="cr" style="grid-template-columns:minmax(0,1fr) auto auto"><div style="min-width:0"><button type="button" class="tt" data-act="open" data-id="${x.g.id}">${esc(x.g.t)}</button><div class="mu sm">${x.rated?'Score '+x.q:'unbewertet'} · Passung ${Math.round(x.aff)} · Rabatt ${x.deal} %</div></div><div class="pr num">${eur(price(x.g))}</div><span class="pill ac num">${Math.round(x.value)}</span></div>`).join('');
+  return head('Empfehlung','Dein nächstes DLC, abgeleitet aus Besitz, Wunschliste, Bewertungen und Preisen. Regelbasiert, keine KI.')+
+  `<div class="stack"><div class="card flat stack"><p class="sm">${srvLine}</p>${tg}<p class="mu sm">Die Rangfolge nutzt deine Regler: Gewichtung der Kriterien, „Rabatt zählt mit“, Höchstpreis und Umfang. Region und Typ sind aus den Titeln abgeleitet (Schätzung).</p></div>${baseWarn}
+  <div class="sec" style="margin-top:6px"><h2>Nächster Kauf</h2>${pick}</div>
+  ${more?`<div class="sec"><h2>Danach <small>Rangzahl rechts</small></h2><div class="cat">${more}</div></div>`:''}</div>`;
+}
+/* ---------- Lokale App: Steam-Abgleich ---------- */
+async function loadServer(){
+  let j=null;
+  try{const r=await fetch('/api/state',{cache:'no-store'});if(r.ok){const x=await r.json();if(x&&x.swa===2){j=x;SRV.static=false}}}catch(e){}
+  if(!j){try{const r=await fetch('data/api-state.json?t='+Date.now(),{cache:'no-store'});if(r.ok){const x=await r.json();if(x&&x.swa===2){j=x;SRV.static=true}}}catch(e){}}
+  if(!j)return false;
+  try{
+    const st=j.state||{};
+    SRV.on=true;SRV.cfg=j.config||{};SRV.mods=j.mods||null;SRV.st=st;
+    SRV.wl=Array.isArray(st.wishlist)&&st.wishlist.length?new Set(st.wishlist.map(Number)):null;
+    SRV.games=Array.isArray(st.ownedGames)?st.ownedGames:[];
+    SRV.owned=new Set([...SRV.games.map(g=>+g.id),...(st.ownedApps||[]).map(Number),...(S.ownedApps||[]).map(Number)]);
+    SRV.hist=st.history||{};SRV.cat=st.catalog||{};
+    buildModel();return true;
+  }catch(e){return false}
+}
+async function postJson(path,body){
+  const r=await fetch(path,{method:'POST',headers:{'content-type':'application/json'},body:typeof body==='string'?body:JSON.stringify(body||{})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.error||('Fehler '+r.status));
+  return j;
+}
+let pollT=0;
+function showJob(j){
+  const el=$('#jobbar');if(!el)return;
+  if(!j||(!j.running&&!j.error)){el.hidden=true;return}
+  const pct=j.total?Math.min(100,Math.round(100*j.done/j.total)):0;
+  el.hidden=false;
+  el.innerHTML=j.running?`<b class="sm">Steam-Aktualisierung</b><div class="sm mu">${esc(j.step||'')} · ${pct} %</div><div class="bar"><i style="width:${pct}%"></i></div>`:`<b class="sm" style="color:var(--bad)">Aktualisierung abgebrochen</b><div class="sm mu">${esc(j.error)}</div>`;
+  if(!j.running)setTimeout(()=>{el.hidden=true},6000);
+}
+async function reloadStatic(){
+  toast('Lade neuesten Stand …');const ok=await loadServer();renderNav();renderBest();renderMain();if(!$('#shade').hidden)refreshSheet();
+  toast(ok?'Neuester Stand geladen':'Keine Daten gefunden')
+}
+async function startRefresh(){
+  if(!SRV.on)return;
+  if(SRV.static){await reloadStatic();return}
+  try{const r=await fetch('/api/refresh',{method:'POST'});if(r.status!==202&&r.status!==409)throw new Error('Fehler '+r.status)}
+  catch(e){toast('Aktualisierung konnte nicht starten: '+((e&&e.message)||e));return}
+  pollJob();
+}
+function pollJob(){
+  clearTimeout(pollT);
+  fetch('/api/job',{cache:'no-store'}).then(r=>r.json()).then(async j=>{
+    SRV.job=j;showJob(j);jobOut();
+    if(j.running){pollT=setTimeout(pollJob,1000);return}
+    if(j.finished){await loadServer();renderNav();renderBest();renderMain();if(!$('#shade').hidden)refreshSheet();toast(j.error?'Aktualisierung abgebrochen':'Von Steam aktualisiert')}
+  }).catch(()=>{pollT=setTimeout(pollJob,3000)});
+}
+function jobOut(){
+  const o=$('#jobout');if(!o||!SRV.job)return;const j=SRV.job;
+  o.innerHTML=(j.log||[]).slice(-8).map(x=>`<div class="sm mu">${esc(x)}</div>`).join('');
+}
+async function bootServer(){
+  const ok=await loadServer();
+  if(!ok)return;
+  renderNav();renderBest();renderMain();
+  if(SRV.static){
+    let t0=Date.now();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-t0>20*60e3){t0=Date.now();loadServer().then(()=>{renderNav();renderBest();if(tab!=='mods')renderMain()})}});
+    return;
+  }
+  try{
+    const j=await (await fetch('/api/job',{cache:'no-store'})).json();
+    if(j.running){pollJob();return}
+  }catch(e){}
+  const ts=SRV.st&&SRV.st.refreshedAt,stale=!ts||Date.now()-Date.parse(ts)>12*36e5;
+  if(stale&&S.auto!==false)startRefresh();
+}
+function localSheet(){
+  const st=SRV.st||{},c=SRV.cfg||{},prompt='',ST=!!SRV.static;
+  const when=st.refreshedAt?new Date(st.refreshedAt).toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'}):'noch nie';
+  const known=new Set(G.map(g=>g.id)),oa=(st.ownedApps||[]).filter(id=>known.has(id)).length;
+  openSheet(`<div class="row sp"><h2>Aktualisieren</h2><button type="button" class="btn g sm" data-act="close">Schließen</button></div>
+  <div class="card flat stack" style="margin-top:10px"><b>Direkt von Steam</b>
+  <p class="sm mu">Letzte Aktualisierung: ${esc(when)}. Steam-Konto ${esc(c.steamId||'')}. API-Schlüssel: ${c.hasKey?'gesetzt':(ST?'bei GitHub nicht hinterlegt (Wunschliste und Preise gehen auch ohne, die Spieleliste nicht)':'fehlt (Wunschliste und Preise gehen auch ohne, die Spieleliste nicht)')}.<br>Wunschliste: ${st.wishlist?st.wishlist.length+' Einträge':'noch nicht gelesen'} · Spiele im Konto: ${(st.ownedGames||[]).length||'nicht gelesen'} · zusätzliche Besitzliste: ${(st.ownedApps||[]).length?(st.ownedApps.length+' Einträge, '+oa+' im Katalog'):'keine'}</p>
+  ${ST?'<p class="sm">Die Daten holt GitHub automatisch etwa alle 6 Stunden von Steam (Wunschliste, Preise, Besitz) und liest die Mod-Liste von trainsimcommunity.com. Hier lädst du den jeweils neuesten fertigen Stand.</p>':''}<div class="row"><button type="button" class="btn" data-act="srvrefresh"${SRV.job&&SRV.job.running?' disabled':''}>${ST?'Neuesten Stand laden':'Jetzt von Steam aktualisieren'}</button></div><div id="jobout"></div></div>
+${ST?'':`  <details class="card flat" style="margin-top:12px"${c.hasKey?'':' open'}><summary><b>Einrichtung: Steam-Schlüssel</b></summary><div class="stack sm" style="margin-top:8px">
+  <p>Den Schlüssel gibt es kostenlos unter <a href="https://steamcommunity.com/dev/apikey" target="_blank" rel="noopener">steamcommunity.com/dev/apikey</a> (als Domain „localhost“ eintragen). Er wird nur in der Datei <code>config.json</code> auf diesem Rechner gespeichert und nie an diese Seite zurückgeschickt. Für die Spieleliste muss in Steam unter Datenschutz „Spieldetails“ öffentlich sein.</p>
+  <label class="row" style="gap:8px">Schlüssel <input type="password" id="cfgkey" autocomplete="off" placeholder="${c.hasKey?'gesetzt, zum Ändern neu eingeben':'Steam-Web-API-Schlüssel'}" style="flex:1;min-width:12rem"></label>
+  <label class="row" style="gap:8px">SteamID64 <input type="text" id="cfgid" value="${esc(c.steamId||'')}" style="width:12rem"></label>
+  <div class="row"><button type="button" class="btn g" data-act="savecfg">Speichern</button><span id="cfgout" class="mu sm"></span></div></div></details>`}
+  <details class="card flat" style="margin-top:12px"><summary><b>DLC-Besitz einlesen</b></summary><div class="stack sm" style="margin-top:8px">
+  <p>Steam bietet keine offizielle Abfrage für DLC-Besitz. Ein Zusatzweg: Öffne <a href="https://store.steampowered.com/dynamicstore/userdata/" target="_blank" rel="noopener">diesen Link</a> in dem Browser, in dem du bei Steam angemeldet bist, markiere alles (Strg+A), kopiere (Strg+C) und füge es hier ein. Ob Steam dort auch DLC aufführt, konnte ich nicht prüfen. Die Zahl „im Katalog“ nach dem Einlesen zeigt dir sofort, ob es klappt. Wenn nicht, hake deine DLC im Katalog ab.</p>
+  <textarea id="ownin" rows="3" placeholder="Hier einfügen" aria-label="Besitzliste"></textarea>
+  <div class="row"><button type="button" class="btn g" data-act="saveown">Besitz einlesen</button><span id="ownout" class="mu sm"></span></div></div></details>
+  <details class="card flat" style="margin-top:12px"><summary><b>Weitere Wege: Seitentext einfügen</b></summary><div class="stack sm" style="margin-top:8px">
+  <p>Falls Steam nicht antwortet: Wunschliste oder DLC-Liste auf Steam öffnen, Strg+A, kopieren und hier einfügen.</p>
+  <textarea id="paste" rows="4" placeholder="Steam-Seitentext" aria-label="Eingefügte Daten"></textarea>
+  <div class="row"><label class="row sm" style="gap:6px">Quelle <select id="psrc" aria-label="Quelle"><option value="wish">Wunschliste</option><option value="dlc">DLC-Liste (nur Preise)</option></select></label></div>
+  <p class="sm mu">Die Wunschliste zeigt danach genau die Einträge aus der Skript-Ausgabe.</p>
+  <div class="row"><button type="button" class="btn g" data-act="parse">Einlesen</button></div><div id="prep" class="sm"></div></div></details>`);
+  jobOut();
+}
+/* ---------- Mod-Assistent (feste Regeln, keine KI) ---------- */
+let CHAT=[],MODBUSY=false;
+const ACR=new Set(['br','db','ice','tsw','obb','sbb','emu','dmu','ec','re','uk','us','lner','gwr','tfl']);
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const pretty=slug=>slug.split('-').map(w=>/^\d/.test(w)?w:ACR.has(w)?w.toUpperCase():w).join(' ').replace(/^./,c=>c.toUpperCase());
+const catName=c=>cap(c.replace(/-/g,' '));
+const MODGEN=new Set(['route','add-on','addon','loco','emu','dmu','pack','line','main','the','and','of','train','sim','world','high','speed','livery','collection','edition','class','express','remastered','corridor','branches','network','subdivision','bahnstrecke','expert','gameplay']);
+function modQ(g){return g.t.replace(/[:\-–&,]/g,' ').split(/\s+/).filter(w=>w.length>2&&!MODGEN.has(w.toLowerCase())).join(' ')}
+function modCompat(d){
+  if(!d||d.forVer==null)return '<span class="pill">Version nicht erkannt</span>';
+  if(d.orNewer||d.forVer>=7)return `<span class="pill good">für TSW ${d.forVer}${d.orNewer?' oder neuer':''}</span>`;
+  return `<span class="pill warn">für TSW ${d.forVer}, TSW 7 unklar</span>`;
+}
+
+/* ---------- Mod-Suche im Browser (GitHub-Version) ---------- */
+const MQ_SYN={skin:['reskins','livery'],skins:['reskins','livery'],reskin:['reskins'],lackierung:['reskins','livery'],farbschema:['reskins','livery'],sound:['sounds','sound'],ton:['sounds'],klang:['sounds'],fahrplan:['timetables','timetable'],fahrplaene:['timetables'],timetable:['timetables'],szenario:['scenario','scenarios'],szenarien:['scenario','scenarios'],lok:['locomotives','loco'],lokomotive:['locomotives','loco'],triebzug:['emu','multiple','units'],wagen:['wagons','coaches','rolling'],fahrzeug:['rolling','stock'],fahrzeuge:['rolling','stock'],deutsch:['german','germany','db','deutsche'],deutsche:['german','germany','db','deutsche'],oesterreich:['austrian','austria','obb'],osterreich:['austrian','austria','obb'],britisch:['british','uk','britain'],englisch:['british','uk'],amerikanisch:['north','american'],schweiz:['swiss','sbb'],patch:['patches'],werkzeug:['utilities'],tool:['utilities'],tools:['utilities']};
+const MQ_STOP=new Set(['ich','suche','suchen','ein','eine','einen','fuer','fur','für','zu','zum','zur','mit','und','oder','der','die','das','den','mod','mods','gibt','es','was','welche','passend','passende','passt','bitte','danke','mir','meine','meiner','nach','von','im','in','auf','the','for','a','an','of','route','add','on','addon','train','sim','world','tsw']);
+const MQ_WEAK=new Set(['br','class','db','ice','obb','sbb','re','ec']);
+const mqWords=t=>String(t).toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g,'').split(/[^a-z0-9]+/).filter(Boolean);
+function mqParse(q){
+  const raw=mqWords(q||''),tokens=[],syn=[];let ver=null;const vm=String(q||'').toLowerCase().match(/tsw\s*(\d)/);if(vm)ver=+vm[1];
+  for(const w of raw){if(MQ_STOP.has(w))continue;if(MQ_SYN[w])syn.push(...MQ_SYN[w]);else tokens.push(w)}
+  return {tokens:[...new Set(tokens)],syn:[...new Set(syn)],ver};
+}
+function mqSearch(idx,q,limit){
+  const P=mqParse(q);if(!idx||(!P.tokens.length&&!P.syn.length))return {total:0,results:[],query:P};
+  const strong=P.tokens.filter(t=>!MQ_WEAK.has(t)),out=[];
+  for(const m of idx.items){
+    const sw=mqWords(m.slug),cw=mqWords(m.cats.join(' '));let sc=0,hit=0;const matched=[];
+    for(const t of P.tokens){const weak=MQ_WEAK.has(t);let v=0;
+      if(sw.includes(t))v=3;else if(sw.some(w=>w.startsWith(t)&&t.length>=3))v=2;else if(cw.includes(t))v=1.5;else if(t.length>=4&&m.slug.includes(t))v=1;
+      if(v){sc+=weak?.5:v;if(!weak)hit++;matched.push(t)}}
+    let sh=0;for(const t of P.syn)if(cw.includes(t)||sw.includes(t)){sh++;matched.push(t)}
+    if(P.syn.length)sc+=sh?1.5+.5*sh:0;
+    if(strong.length&&!hit)continue;
+    if(!strong.length&&P.tokens.length&&!matched.length)continue;
+    if(!P.tokens.length&&!sh)continue;
+    if(P.syn.length&&!sh&&P.tokens.length)sc-=.5;
+    if(strong.length>1&&hit===strong.length)sc+=2;
+    out.push({...m,score:sc,matched});
+  }
+  out.sort((a,b)=>b.score-a.score||(b.lastmod>a.lastmod?1:-1));
+  return {total:out.length,results:out.slice(0,limit),query:P};
+}
+async function staticMods(force){
+  if(SRV.mi&&!force)return SRV.mi;
+  const a=await fetch('data/mods-index.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
+  const b=await fetch('data/mods-detail.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():{}).catch(()=>({}));
+  if(!a||!Array.isArray(a.items))throw new Error('Die Mod-Liste ist noch nicht vorhanden. Sie entsteht beim nächsten automatischen Lauf bei GitHub.');
+  SRV.mi=a;SRV.md=b||{};return a;
+}
+async function staticSearch(q,limit){
+  const idx=await staticMods(),r=mqSearch(idx,q,limit);
+  r.results.forEach(m=>{const d=SRV.md&&SRV.md[m.url];if(d&&d.title)m.detail=d});
+  return {...r,note:'',indexCount:idx.count,fetchedAt:idx.fetchedAt};
+}
+function modReply(q,j){
+  const Q=j.query||{tokens:[],syn:[]},terms=[...Q.tokens,...Q.syn];
+  if(!j.results.length)return `<p>Dazu habe ich nichts gefunden${terms.length?` (gesucht: ${esc(terms.join(', '))})`:''}.</p><p class="mu sm">Die Mod-Namen sind meist englisch. Probier weniger oder andere Wörter, zum Beispiel nur die Baureihe („BR 111“), den Ort oder die Art („reskin“, „sound“, „timetable“).</p>`;
+  const items=j.results.map(m=>`<div class="card flat stack" style="padding:10px 12px"><div class="row sp" style="align-items:flex-start"><b style="min-width:0;overflow-wrap:anywhere">${esc((m.detail&&m.detail.title)||pretty(m.slug))}</b>${modCompat(m.detail)}</div>
+  <div class="sm mu">${esc(m.cats.map(catName).join(' › '))}${m.lastmod?' · '+dts(m.lastmod.slice(0,10)):''}</div>
+  <div class="row"><a class="btn sm" href="${esc(m.url)}" target="_blank" rel="noopener">Auf trainsimcommunity.com öffnen</a><span class="mu sm">Treffer: ${esc(m.matched.join(', '))}</span></div></div>`).join('');
+  return `<p>Gesucht nach <b>${esc(terms.join(', '))}</b>. ${j.total} Treffer, die besten ${j.results.length}:</p>${items}${j.note?`<p class="mu sm">${esc(j.note)}</p>`:''}<p class="mu sm">Mods sind inoffiziell. Welche Version sie brauchen, steht auf der jeweiligen Seite. Es wird nichts heruntergeladen.</p>`;
+}
+function drawChat(scroll){
+  const el=$('#chat');if(!el)return;
+  el.innerHTML=CHAT.map(m=>`<div class="msg ${m.who}"><div class="lbl">${m.who==='me'?'Du':'Mod-Assistent'}</div><div class="stack" style="gap:8px">${m.html}</div></div>`).join('')+(MODBUSY?'<div class="msg bot"><div class="lbl">Mod-Assistent</div><p class="mu sm">Suche läuft, die Mod-Seiten werden einzeln gelesen …</p></div>':'');
+  if(scroll)el.lastElementChild&&el.lastElementChild.scrollIntoView({block:'nearest'});
+}
+async function modAsk(q){
+  q=String(q||'').trim();if(!q||MODBUSY)return;
+  CHAT.push({who:'me',html:`<p>${esc(q)}</p>`});MODBUSY=true;drawChat(true);
+  try{
+    let j;
+    if(SRV.static){j=await staticSearch(q,10)}
+    else{const r=await fetch('/api/mods/search?limit=10&q='+encodeURIComponent(q),{cache:'no-store'});j=await r.json();if(!r.ok)throw new Error(j.error||('Fehler '+r.status))}
+    CHAT.push({who:'bot',html:modReply(q,j)});
+  }catch(e){CHAT.push({who:'bot',html:`<p>Das hat nicht geklappt: ${esc((e&&e.message)||e)}</p><p class="mu sm">Läuft das Programm noch, und bist du online?</p>`})}
+  MODBUSY=false;drawChat(true);
+}
+function vMods(){
+  if(!SRV.on)return head('Mods','Mod-Suche auf trainsimcommunity.com')+`<div class="card stack"><b>Dieser Assistent braucht die lokale App oder die GitHub-Version.</b><p class="sm">Diese Seite darf trainsimcommunity.com nicht selbst abrufen. In der lokalen App auf deinem PC oder in der GitHub-Version (App auf dem iPhone) sucht der Assistent in der Mod-Liste und zeigt die besten Treffer.</p></div>`;
+  if(!CHAT.length)CHAT.push({who:'bot',html:`<p>Hallo! Ich suche Train-Sim-World-Mods auf trainsimcommunity.com. Schreib mir, was du suchst, zum Beispiel:</p><p class="sm mu">„Skins für die BR 111“ · „Sound Salzburg“ · „Fahrplan Rosenheim“ · „britische Lokomotiven“</p><p class="mu sm">Ich bin ein Suchassistent mit festen Regeln, keine KI. Ich zerlege deine Frage in Stichwörter und Kategorien (Skins, Sounds, Fahrpläne, Szenarien …) und vergleiche sie mit den Mod-Namen und Kategorien.</p>`});
+  const wl=G.filter(isWish).filter(g=>modQ(g));
+  const m=SRV.mods;
+  return head('Mods','Mod-Suche auf trainsimcommunity.com, passend zu deinen Strecken.')+`<div class="stack">
+  <div class="card flat row sp"><span class="sm mu">${m?`Mod-Liste: ${m.count} Train-Sim-World-Mods, Stand ${new Date(m.fetchedAt).toLocaleDateString('de-DE')}`:'Mod-Liste wird bei der ersten Suche geladen.'}</span><button type="button" class="btn g sm" data-act="modsrefresh">Liste neu laden</button></div>
+  ${wl.length?`<div class="row"><span class="lbl">Zu deiner Wunschliste</span>${wl.map(g=>`<button type="button" class="btn g sm" data-act="modchip" data-q="${esc(modQ(g))}">${esc(modQ(g).split(' ').slice(0,3).join(' '))}</button>`).join('')}</div>`:''}
+  <div class="row"><span class="lbl">Arten</span>${[['Reskins','reskin'],['Sounds','sound'],['Fahrpläne','timetable'],['Szenarien','szenario']].map(x=>`<button type="button" class="btn g sm" data-act="modchip" data-q="${x[1]}">${x[0]}</button>`).join('')}</div>
+  <div id="chat" class="chat"></div>
+  <div class="row" style="align-items:stretch"><textarea id="chatin" rows="2" placeholder="Was suchst du? z. B. Skins für die BR 111" aria-label="Frage an den Mod-Assistenten" style="flex:1;min-width:12rem"></textarea><button type="button" class="btn" data-act="modsend">Senden</button></div></div>`;
+}
+
+function localSettings(){
+  if(!SRV.on)return `<section class="card stack"><h3>Lokale App</h3><p class="sm mu">Nicht verbunden. Diese Seite läuft ohne die lokale App; Wunschliste, Besitz und Mods lassen sich nur dort automatisch lesen.</p></section>`;
+  const c=SRV.cfg||{},m=SRV.mods;
+  if(SRV.static)return `<section class="card stack"><h3>GitHub-Version</h3><p class="sm">Verbunden. Steam-Konto ${esc(c.steamId||'')}, API-Schlüssel ${c.hasKey?'bei GitHub hinterlegt':'bei GitHub nicht hinterlegt'}. ${m?'Mod-Liste: '+m.count+' Mods.':'Mod-Liste noch nicht geladen.'} GitHub holt die Daten automatisch etwa alle 6 Stunden. Deine Haken und Regler bleiben auf diesem Gerät.</p><div class="row"><button type="button" class="btn g" data-act="refresh">Neuesten Stand laden</button></div></section>`;
+  return `<section class="card stack"><h3>Lokale App</h3><p class="sm">Verbunden. Steam-Konto ${esc(c.steamId||'')}, API-Schlüssel ${c.hasKey?'gesetzt':'fehlt'}. ${m?'Mod-Liste: '+m.count+' Mods.':'Mod-Liste noch nicht geladen.'}</p>
+  <label class="row sm" style="gap:6px"><input type="checkbox" data-in="auto" ${S.auto!==false?'checked':''}> Beim Öffnen automatisch von Steam aktualisieren (wenn die Daten älter als 12 Stunden sind)</label>
+  <div class="row"><button type="button" class="btn g" data-act="refresh">Aktualisieren und Einrichtung öffnen</button></div></section>`;
+}
+
+/* ---------- Aktionen ---------- */
+const ACT={
+  tab:d=>{go(d.t)},
+  wp:()=>{$('#wp').classList.toggle('open')},
+  open:d=>{S.cur=+d.id;save();$('#wp').classList.remove('open');go('analyse')},
+  pc:d=>{S.cur=+d.id;save();renderMain()},
+  cmp:d=>{const id=+d.id,i=S.sel.indexOf(id);i<0?S.sel.push(id):S.sel.splice(i,1);save();renderMain()},
+  cmpbest:()=>{const l=G.filter(rated).sort((a,b)=>score(b).s-score(a).s).slice(0,3).map(g=>g.id);S.sel=l;save();renderMain()},
+  cmpclear:()=>{S.sel=[];save();renderMain()},
+  cmpswap:()=>{if(S.sel.length>1){S.sel=[S.sel[1],S.sel[0],...S.sel.slice(2)];save();renderMain()}},
+  own:d=>{const u=U(+d.id);u.owned=!u.owned;save();renderMain();renderBest();renderNav()},
+  wish:d=>{const g=BY.get(+d.id),u=U(g.id);u.wish=!isWish(g);save();renderMain();renderBest();renderNav()},
+  fav:d=>{const u=U(+d.id);u.fav=!u.fav;save();renderMain()},
+  allown:d=>{catRows().forEach(g=>{U(g.id).owned=d.v==='1'});save();afterKatalog();renderBest()},
+  clrrat:d=>{const u=U(+d.id);u.rat=u.rat||{};u.rat[d.k]=null;save();renderMain()},
+  clrscenic:d=>{U(+d.id).scenic=null;save();renderMain()},
+  logprice:d=>{const v=parseFloat($('#lp').value);if(!(v>=0)){toast('Bitte einen Preis eintragen');return}const g=BY.get(+d.id),c=curPt(g),u=U(g.id),t=todayISO();u.hist=(u.hist||[]).filter(e=>!(e.d===t&&e.k==='obs'));u.hist.push({d:t,p:v,o:Math.max(v,c.o||v),k:'obs',src:'manuell'});save();renderMain();renderBest();toast('Preis eingetragen')},
+  copyprompt:d=>{const g=BY.get(+d.id);const t='Recherchiere Nutzerbewertungen, Streckenlänge, Haltehäufigkeit, Fahrzeuge und Technik zu „Train Sim World '+(g.pre==='TSW6'?'6':'7')+': '+g.t+'“ und trage 0-10-Bewertungen mit Quellen in meinen Steam Wishlist Analyzer ein.';navigator.clipboard.writeText(t).then(()=>toast('Auftrag kopiert')).catch(()=>toast('Kopieren nicht möglich'))},
+  refresh:()=>{refreshSheet()},
+  srvrefresh:()=>{startRefresh()},
+  savecfg:async()=>{const k=$('#cfgkey').value.trim(),id=$('#cfgid').value.trim(),o=$('#cfgout');try{const body={steamId64:id};if(k)body.steamApiKey=k;await postJson('/api/config',body);o.textContent='Gespeichert.';await loadServer();refreshSheet()}catch(e){o.textContent='Nicht gespeichert: '+((e&&e.message)||e)}},
+  saveown:async()=>{const t=$('#ownin').value.trim(),o=$('#ownout');if(!t){o.textContent='Bitte zuerst einfügen.';return}if(SRV.static){let jj;try{jj=JSON.parse(t)}catch(e){o.textContent='Das ist kein gültiges JSON.';return}const arr=Array.isArray(jj)?jj:jj&&jj.rgOwnedApps;if(!Array.isArray(arr)){o.textContent='Feld rgOwnedApps nicht gefunden.';return}S.ownedApps=arr.map(Number).filter(Boolean);save();await loadServer();renderNav();renderBest();renderMain();refreshSheet();const kn=new Set(G.map(g=>g.id)),n=S.ownedApps.filter(i=>kn.has(i)).length,o3=$('#ownout');if(o3)o3.textContent=S.ownedApps.length+' Einträge gelesen, davon '+n+' im Katalog.'+(n?'':' Keine bekannten DLC darin: hake sie im Katalog ab.');return}
+    try{const j=await postJson('/api/owned',t);await loadServer();renderNav();renderBest();renderMain();refreshSheet();const o2=$('#ownout');if(o2)o2.textContent=j.total+' Einträge gelesen, davon '+j.inCatalog+' im Katalog.'+(j.inCatalog?'':' Keine bekannten DLC darin: hake sie im Katalog ab.')}catch(e){o.textContent='Nicht gelesen: '+((e&&e.message)||e)}},
+  modsfor:d=>{const g=BY.get(+d.id);go('mods');if(g)modAsk(modQ(g))},
+  modchip:d=>{modAsk(d.q)},
+  modsend:()=>{const i=$('#chatin'),q=i&&i.value;if(i)i.value='';modAsk(q)},
+  modsrefresh:async()=>{try{toast('Mod-Liste wird geladen …');if(SRV.static){const ix=await staticMods(true);SRV.mods={count:ix.count,fetchedAt:ix.fetchedAt};renderMain();toast(ix.count+' Mods in der Liste');return}const j=await postJson('/api/mods/refresh',{});SRV.mods={count:j.count,fetchedAt:j.fetchedAt};renderMain();toast(j.count+' Mods in der Liste')}catch(e){toast('Mod-Liste nicht ladbar: '+((e&&e.message)||e))}},
+  close:()=>{closeSheet()},
+  parse:()=>{const t=$('#paste').value.trim();if(t.length<2){$('#prep').textContent='Bitte zuerst Daten einfügen.';return}
+    let r;
+    try{
+      if(t[0]==='{')r=parseJson(JSON.parse(t),{wish:true});
+      else{if(t.length<20){$('#prep').textContent='Der Text ist zu kurz.';return}const w=$('#psrc').value==='wish';r=parsePaste(t,{wish:w,prune:w})}
+    }catch(e){$('#prep').textContent='Einlesen nicht möglich: '+((e&&e.message)||e);return}
+    $('#prep').innerHTML=`<p><b>${r.upd.length} aktualisiert</b>, ${r.same.length} unverändert${r.neu.length?`, ${r.neu.length} neu`:''}${r.miss?`, ${r.miss} von der Wunschliste entfernt`:''}.</p>${r.upd.length?'<ul style="margin:4px 0;padding-left:1.1rem">'+r.upd.slice(0,12).map(x=>`<li>${esc(x)}</li>`).join('')+(r.upd.length>12?`<li>… und ${r.upd.length-12} weitere</li>`:'')+'</ul>':''}${r.bad.length?`<p class="mu">Nicht übernommen: ${r.bad.slice(0,6).map(esc).join('; ')}${r.bad.length>6?' …':''}</p>`:''}${!r.upd.length&&!r.same.length&&!r.neu.length?'<p style="color:var(--warn)">Keine bekannten Titel erkannt. Prüfe, ob du die Steam-Seite komplett kopiert hast.</p>':''}`;
+    renderNav();renderBest();renderMain()},
+  ask:()=>{askClaude()},
+  copy:d=>{copyText(d.t)},
+  add:()=>{const L=$('#addin').value.split('\n').map(x=>x.trim()).filter(Boolean);let n=0;
+    L.forEach(l=>{const u=l.match(/app\/(\d+)\/?([^\/?\s]*)/),c=l.split(',');let id,t,p=null,o=null;
+      if(u){id=+u[1];t=decodeURIComponent(u[2]||'').replace(/_/g,' ').replace(/^Train Sim World \d /,'').trim()||'App '+id}
+      else if(c.length>=2&&+c[0]){id=+c[0];t=c[1].trim();p=c[2]?+c[2].replace(',','.'):null;o=c[3]?+c[3].replace(',','.'):p}
+      if(!id||BY.has(id))return;const t0=todayISO();
+      S.extra.push({id,t,pre:'TSW7',d:'',ty:/Route|Bahnstrecke|Line|Corridor/i.test(t)&&!/Loco|EMU|DMU|Pack/i.test(t)?'route':'other',rev:'',wish:1,h:p!=null?[{d:t0,p:o,o,k:'list'},{d:t0,p,o,k:'obs',src:'manuell'}]:[]});n++});
+    save();buildModel();renderNav();toast(n+' Einträge hinzugefügt');renderMain()},
+  exp:d=>{doExport(d.f)},
+  reset1:()=>{$('#rs1').hidden=true;$('#rs2').hidden=false},
+  reset2:()=>{try{localStorage.removeItem(KEY)}catch(e){}location.reload()}
+};
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(el){const a=ACT[el.dataset.act];if(a){a(el.dataset,el,e)}return}
+  if(e.target.id==='shade')closeSheet();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSheet();$('#wp').classList.remove('open')}});
+
+/* ---------- Eingaben ---------- */
+function onInput(e){
+  const el=e.target,k=el.dataset.in;if(!k)return;
+  const id=+el.dataset.id,kk=el.dataset.k;
+  switch(k){
+    case 'w':S.w[kk]=+el.value;{const tot=CR.reduce((a,c)=>a+ +S.w[c[0]],0)||1;CR.forEach(c=>{const v=$('#wv_'+c[0]);if(v)v.textContent=Math.round(100*S.w[c[0]]/tot)+'%'})}save();liveUpdate();break;
+    case 'buy':{S.buy[kk]=kk==='ty'||kk==='scope'?el.value:+el.value;const v=$('#bv_'+kk);if(v)v.textContent=kk==='wd'?S.buy.wd+'%':kk==='max'?(S.buy.max>=60?'∞':S.buy.max+'€'):'';save();liveUpdate();break}
+    case 'f':F[kk]=el.type==='checkbox'?el.checked:el.value;{const w=$('#wl');if(w)w.innerHTML=wishCards()}break;
+    case 'c':C[kk]=el.value;afterKatalog();break;
+    case 'own':{const u=U(id);u.owned=el.checked;save();const r=$('#cr'+id);if(r)r.classList.toggle('owned',el.checked);catCount();renderBest();renderNav();break}
+    case 'asel':S.cur=+el.value;save();renderMain();break;
+    case 'psel':S.cur=+el.value;save();renderMain();break;
+    case 'rat':{const u=U(id);u.rat=u.rat||{};u.rat[kk]=+el.value;save();liveAnalyse(BY.get(id));break}
+    case 'scenic':U(id).scenic=+el.value;save();liveAnalyse(BY.get(id));break;
+    case 'target':U(id).target=el.value===''?null:+el.value;save();liveAnalyse(BY.get(id));renderBest();break;
+    case 'hours':U(id).hours=el.value===''?null:+el.value;save();liveAnalyse(BY.get(id));break;
+    case 'note':U(id).note=el.value;save();break;
+    case 'compat':U(id).compat=el.value;save();break;
+    case 'hw':S.hw[kk]=el.value;save();break;
+    case 'auto':S.auto=el.checked;save();break;
+    case 'cadd':if(el.value){S.sel.push(+el.value);save();renderMain()}break;
+  }
+}
+document.addEventListener('input',onInput);
+document.addEventListener('change',e=>{const el=e.target;if(el.tagName==='SELECT'||el.type==='checkbox'){if(el.dataset.in==='compat'||el.dataset.in==='asel'||el.dataset.in==='psel'||el.dataset.in==='cadd'||el.dataset.in==='own')return;}});
+
+/* ---------- Start ---------- */
+buildModel();
+const h0=(location.hash||'').replace('#','');if(TABS.find(t=>t[0]===h0))tab=h0;
+renderNav();renderPanel();renderMain();bootServer();
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&e.target&&e.target.id==='chatin'){e.preventDefault();const q=e.target.value;e.target.value='';modAsk(q)}});
+let rzT=0,rzW=window.innerWidth;window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(Math.abs(window.innerWidth-rzW)<40)return;rzW=window.innerWidth;if(tab==='analyse'||tab==='preise'){const y=window.scrollY;renderMain();window.scrollTo(0,y)}},200)});
+window.addEventListener('hashchange',()=>{const h=(location.hash||'').replace('#','');if(h!==tab&&TABS.find(t=>t[0]===h)){tab=h;renderNav();renderMain()}});
+if(window.__SWA_TEST)window.__SWA_TEST={SRV,recs,affinity,loadServer,modAsk,CHAT:()=>CHAT,G:()=>G,score,price,disc,picks,parsePaste,parseJson,S,hist,curPt,chart,rating,verdict,nextSale};
+})();
+</script>
+
+</body></html>
