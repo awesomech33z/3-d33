@@ -27,7 +27,7 @@ jobs:
       - name: Daten von Steam und trainsimcommunity.com holen
         env:
           STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
-          DATA_DIR: steam-wishlist-github/docs/data
+          DATA_DIR: ${{ github.workspace }}/steam-wishlist-github/docs/data
         run: node steam-wishlist-github/server.mjs --once
       - name: Stand im Projekt speichern
         run: |
