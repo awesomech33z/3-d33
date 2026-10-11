@@ -4,8 +4,13 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "17 */6 * * *"   # etwa alle 6 Stunden
   workflow_dispatch:
+    inputs:
+      quick:
+        description: "Schnell (Mod-Seiten nicht neu lesen)"
+        required: false
+        default: "false"
 
 permissions:
   contents: write
@@ -28,8 +33,8 @@ jobs:
         env:
           STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
           DATA_DIR: ${{ github.workspace }}/steam-wishlist-github/docs/data
-        run: node steam-wishlist-github/server.mjs --once
-      - name: Stand im Projekt speichern
+        run: node steam-wishlist-github/server.mjs --once ${{ github.event.inputs.quick == 'true' && '--quick' || '' }}
+      - name: Stand im Projekt speichern (Preisverlauf bleibt erhalten)
         run: |
           git config user.name "github-actions"
           git config user.email "actions@users.noreply.github.com"
