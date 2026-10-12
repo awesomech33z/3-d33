@@ -1,10 +1,9 @@
 {
  "swa": 2,
  "stand": "2026-10-12",
- "refreshedAt": "2026-10-12T16:00:09.097Z",
+ "refreshedAt": "2026-10-12T18:34:17.611Z",
  "wishlist": [
   4680070,
-  4680200,
   4680590,
   4680660,
   4679400,
@@ -49,7 +48,7 @@
   {
    "id": 976590,
    "name": "Bus Simulator 21 Next Stop",
-   "hours": 20.8
+   "hours": 20.9
   },
   {
    "id": 1059990,
@@ -114,7 +113,7 @@
   {
    "id": 4678800,
    "name": "Train Sim World® 7",
-   "hours": 45.6
+   "hours": 45.8
   }
  ],
  "ownedApps": [],
