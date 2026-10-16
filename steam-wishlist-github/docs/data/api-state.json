@@ -8,7 +8,7 @@
  "state": {
   "swa": 2,
   "stand": "2026-10-16",
-  "refreshedAt": "2026-10-16T12:51:40.774Z",
+  "refreshedAt": "2026-10-16T18:46:19.102Z",
   "wishlist": [
    4680590,
    4679400,
@@ -109,7 +109,7 @@
    {
     "id": 4148530,
     "name": "City Transport Simulator 2026",
-    "hours": 32.8
+    "hours": 35.2
    },
    {
     "id": 4622530,
@@ -119,7 +119,7 @@
    {
     "id": 4678800,
     "name": "Train Sim World® 7",
-    "hours": 48.8
+    "hours": 49
    }
   ],
   "ownedApps": [],
@@ -2023,6 +2023,6 @@
  },
  "mods": {
   "count": 11600,
-  "fetchedAt": "2026-10-16T12:51:42.552Z"
+  "fetchedAt": "2026-10-16T18:46:20.726Z"
  }
 }
