@@ -8,7 +8,7 @@
  "state": {
   "swa": 2,
   "stand": "2026-10-18",
-  "refreshedAt": "2026-10-18T12:43:52.471Z",
+  "refreshedAt": "2026-10-18T18:39:47.283Z",
   "wishlist": [
    4680590,
    4679400,
@@ -112,7 +112,7 @@
    {
     "id": 4148530,
     "name": "City Transport Simulator 2026",
-    "hours": 39
+    "hours": 39.6
    },
    {
     "id": 4622530,
@@ -2026,6 +2026,6 @@
  },
  "mods": {
   "count": 11602,
-  "fetchedAt": "2026-10-18T12:43:54.803Z"
+  "fetchedAt": "2026-10-18T18:39:49.753Z"
  }
 }
