@@ -8,7 +8,7 @@
  "state": {
   "swa": 2,
   "stand": "2026-10-24",
-  "refreshedAt": "2026-10-24T00:57:37.212Z",
+  "refreshedAt": "2026-10-24T06:47:50.003Z",
   "wishlist": [
    3663520,
    4679330,
@@ -122,7 +122,7 @@
    {
     "id": 4678800,
     "name": "Train Sim World® 7",
-    "hours": 50.6
+    "hours": 50.8
    }
   ],
   "ownedApps": [],
@@ -2781,6 +2781,6 @@
  },
  "mods": {
   "count": 11646,
-  "fetchedAt": "2026-10-24T00:57:39.416Z"
+  "fetchedAt": "2026-10-24T06:47:52.329Z"
  }
 }
