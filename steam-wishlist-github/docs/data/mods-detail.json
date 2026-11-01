@@ -33351,5 +33351,28 @@
   "orNewer": false,
   "mentions": [],
   "at": 1793495670125
+ },
+ "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c19-patches/i8379-german-timetable-substitution-mini-mods-ska-msb-rsn-hbk-hma": {
+  "title": "German Timetable Substitution Mini Mods (SKA, MSB, RSN, HBK, HMA)",
+  "forVer": null,
+  "orNewer": false,
+  "mentions": [
+   7
+  ],
+  "at": 1793516663910
+ },
+ "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c19-patches/i8427-train-sim-world-7-steam-locomotive-ai-chuff-audio-fix": {
+  "title": "Train Sim World 7 steam locomotive AI chuff audio fix",
+  "forVer": null,
+  "orNewer": false,
+  "mentions": [],
+  "at": 1793516664656
+ },
+ "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c113-announcements/i8584-class-333-dan-strauss-announcements": {
+  "title": "Class 333 Dan Strauss Announcements",
+  "forVer": null,
+  "orNewer": false,
+  "mentions": [],
+  "at": 1793516665236
  }
 }
