@@ -1,7 +1,7 @@
 {
  "swa": 2,
  "stand": "2026-11-03",
- "refreshedAt": "2026-11-03T07:16:47.577Z",
+ "refreshedAt": "2026-11-03T13:09:28.122Z",
  "wishlist": [
   3663520,
   4679330,
@@ -130,6 +130,12 @@
    "t": "Freightliner BR Class 70 Add-On",
    "pre": "TSW7",
    "d": "2026-10-15",
+   "ty": "other"
+  },
+  "4680780": {
+   "t": "Cargo Line Vol. 7 - Vans ",
+   "pre": "TSW7",
+   "d": "2026-11-10",
    "ty": "other"
   },
   "4714940": {
