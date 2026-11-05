@@ -33112,7 +33112,7 @@
   "forVer": null,
   "orNewer": false,
   "mentions": [],
-  "at": 1793300289430
+  "at": 1793905282678
  },
  "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c19-patches/i2564-better-blue-first-great-western-branding-patch": {
   "title": "Better Blue First Great Western (Branding Patch)",
@@ -33488,5 +33488,14 @@
   "orNewer": false,
   "mentions": [],
   "at": 1793797952149
+ },
+ "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c111-timetables/i8611-make-ambergate-great-again": {
+  "title": "Make Ambergate Great Again",
+  "forVer": null,
+  "orNewer": false,
+  "mentions": [
+   7
+  ],
+  "at": 1793905283267
  }
 }
