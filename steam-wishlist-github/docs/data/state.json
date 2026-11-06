@@ -1,7 +1,7 @@
 {
  "swa": 2,
  "stand": "2026-11-06",
- "refreshedAt": "2026-11-06T13:12:31.893Z",
+ "refreshedAt": "2026-11-06T18:59:06.563Z",
  "wishlist": [
   3663520,
   4679330,
@@ -9,9 +9,15 @@
   4680590,
   4714950,
   4714960,
-  4952530
+  4952530,
+  227300
  ],
  "ownedGames": [
+  {
+   "id": 231120,
+   "name": "Euro Truck Simulator 2 Demo",
+   "hours": 0.8
+  },
   {
    "id": 246620,
    "name": "Plague Inc: Evolved",
@@ -120,6 +126,12 @@
  ],
  "ownedApps": [],
  "catalog": {
+  "227300": {
+   "t": "Euro Truck Simulator 2",
+   "pre": "Steam",
+   "d": "2012-10-12",
+   "ty": "other"
+  },
   "3663520": {
    "t": "London Overground Mildmay line: Stratford - Willesden Junction Route Add-On",
    "pre": "TSW6",
@@ -170,6 +182,10 @@
   }
  },
  "prices": {
+  "227300": {
+   "p": 19.99,
+   "o": 19.99
+  },
   "3662630": {
    "p": 29.99,
    "o": 29.99
@@ -844,6 +860,13 @@
   }
  },
  "history": {
+  "227300": [
+   {
+    "d": "2026-11-06",
+    "p": 19.99,
+    "o": 19.99
+   }
+  ],
   "3662630": [
    {
     "d": "2026-10-09",
