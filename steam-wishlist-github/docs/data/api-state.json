@@ -8,7 +8,7 @@
  "state": {
   "swa": 2,
   "stand": "2026-11-07",
-  "refreshedAt": "2026-11-07T07:04:28.781Z",
+  "refreshedAt": "2026-11-07T12:57:11.577Z",
   "wishlist": [
    3663520,
    4679330,
@@ -16,15 +16,9 @@
    4680590,
    4714950,
    4714960,
-   4952530,
-   227300
+   4952530
   ],
   "ownedGames": [
-   {
-    "id": 231120,
-    "name": "Euro Truck Simulator 2 Demo",
-    "hours": 0.9
-   },
    {
     "id": 246620,
     "name": "Plague Inc: Evolved",
@@ -73,12 +67,17 @@
    {
     "id": 1124180,
     "name": "Rail Route",
-    "hours": 8.5
+    "hours": 8.6
    },
    {
     "id": 1222670,
     "name": "The Sims™ 4",
     "hours": 4
+   },
+   {
+    "id": 1420770,
+    "name": "Winter Resort Simulator 2",
+    "hours": 1.9
    },
    {
     "id": 1815780,
@@ -2810,6 +2809,6 @@
  },
  "mods": {
   "count": 11696,
-  "fetchedAt": "2026-11-07T07:04:31.529Z"
+  "fetchedAt": "2026-11-07T12:57:14.079Z"
  }
 }
