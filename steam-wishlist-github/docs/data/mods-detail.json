@@ -33211,7 +33211,7 @@
    3,
    7
   ],
-  "at": 1793495669480
+  "at": 1794121662008
  },
  "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c19-patches/i8519-ktw-class-376-in-eps": {
   "title": "[KTW] Class 37/6 in EPS",
@@ -33220,21 +33220,21 @@
   "mentions": [
    7
   ],
-  "at": 1793495670859
+  "at": 1794121664100
  },
  "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c19-patches/i8520-miscellaneous-mildmay-line-patches": {
   "title": "Miscellaneous Mildmay Line Patches",
   "forVer": null,
   "orNewer": false,
   "mentions": [],
-  "at": 1793495671541
+  "at": 1794121664737
  },
  "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c111-timetables/i4165-niddertalbahn-2023-timetable": {
   "title": "Niddertalbahn 2023 Timetable",
   "forVer": null,
   "orNewer": false,
   "mentions": [],
-  "at": 1793495672273
+  "at": 1794121667397
  },
  "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i8524-155345-west-yorkshire-pte-green": {
   "title": "155345 - West Yorkshire PTE Green",
@@ -33392,7 +33392,7 @@
   "forVer": null,
   "orNewer": false,
   "mentions": [],
-  "at": 1793495670125
+  "at": 1794121662764
  },
  "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c19-patches/i8379-german-timetable-substitution-mini-mods-ska-msb-rsn-hbk-hma": {
   "title": "German Timetable Substitution Mini Mods (SKA, MSB, RSN, HBK, HMA)",
@@ -33401,21 +33401,21 @@
   "mentions": [
    7
   ],
-  "at": 1793516663910
+  "at": 1794121663432
  },
  "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c19-patches/i8427-train-sim-world-7-steam-locomotive-ai-chuff-audio-fix": {
   "title": "Train Sim World 7 steam locomotive AI chuff audio fix",
   "forVer": null,
   "orNewer": false,
   "mentions": [],
-  "at": 1793516664656
+  "at": 1794121666025
  },
  "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c113-announcements/i8584-class-333-dan-strauss-announcements": {
   "title": "Class 333 Dan Strauss Announcements",
   "forVer": null,
   "orNewer": false,
   "mentions": [],
-  "at": 1793516665236
+  "at": 1794121666673
  },
  "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c19-patches/i8591-hide-overhead-line-equipment-centenary-ohle": {
   "title": "Hide Overhead Line Equipment / Centenary / OHLE",
@@ -33531,5 +33531,12 @@
    7
   ],
   "at": 1794013532210
+ },
+ "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c19-patches/i8625-objective-marker-modification": {
+  "title": "Objective Marker Modification",
+  "forVer": null,
+  "orNewer": false,
+  "mentions": [],
+  "at": 1794121665354
  }
 }
