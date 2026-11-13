@@ -1,6 +1,6 @@
 {
- "fetchedAt": "2026-11-13T06:41:30.985Z",
- "count": 11714,
+ "fetchedAt": "2026-11-13T19:39:43.600Z",
+ "count": 11720,
  "items": [
   {
    "id": 7205,
@@ -1708,8 +1708,8 @@
    "lastmod": ""
   },
   {
-   "id": 5751,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
+   "id": 4196,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
    "slug": "37418-loram",
    "cats": [
     "reskins",
@@ -1719,8 +1719,8 @@
    "lastmod": ""
   },
   {
-   "id": 4196,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
+   "id": 5751,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
    "slug": "37418-loram",
    "cats": [
     "reskins",
@@ -9980,8 +9980,8 @@
    "lastmod": ""
   },
   {
-   "id": 246,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i246-bc-rail-pack",
+   "id": 11,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i11-bc-rail-pack",
    "slug": "bc-rail-pack",
    "cats": [
     "reskins",
@@ -9991,8 +9991,8 @@
    "lastmod": ""
   },
   {
-   "id": 11,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i11-bc-rail-pack",
+   "id": 246,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i246-bc-rail-pack",
    "slug": "bc-rail-pack",
    "cats": [
     "reskins",
@@ -10332,8 +10332,8 @@
    "lastmod": ""
   },
   {
-   "id": 256,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i256-canadian-mixed-revenue-locomotives",
+   "id": 5,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i5-canadian-mixed-revenue-locomotives",
    "slug": "canadian-mixed-revenue-locomotives",
    "cats": [
     "reskins",
@@ -10343,8 +10343,8 @@
    "lastmod": ""
   },
   {
-   "id": 5,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i5-canadian-mixed-revenue-locomotives",
+   "id": 256,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i256-canadian-mixed-revenue-locomotives",
    "slug": "canadian-mixed-revenue-locomotives",
    "cats": [
     "reskins",
@@ -10420,8 +10420,8 @@
    "lastmod": ""
   },
   {
-   "id": 6,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i6-canadian-shortlines-pack",
+   "id": 247,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i247-canadian-shortlines-pack",
    "slug": "canadian-shortlines-pack",
    "cats": [
     "reskins",
@@ -10431,8 +10431,8 @@
    "lastmod": ""
   },
   {
-   "id": 247,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i247-canadian-shortlines-pack",
+   "id": 6,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i6-canadian-shortlines-pack",
    "slug": "canadian-shortlines-pack",
    "cats": [
     "reskins",
@@ -10684,8 +10684,8 @@
    "lastmod": ""
   },
   {
-   "id": 1792,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1792-cnw-sd40",
+   "id": 1498,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1498-cnw-sd40",
    "slug": "cnw-sd40",
    "cats": [
     "reskins",
@@ -10695,8 +10695,8 @@
    "lastmod": ""
   },
   {
-   "id": 1498,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1498-cnw-sd40",
+   "id": 1792,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1792-cnw-sd40",
    "slug": "cnw-sd40",
    "cats": [
     "reskins",
@@ -13775,8 +13775,8 @@
    "lastmod": ""
   },
   {
-   "id": 246,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i246-bc-rail-pack",
+   "id": 11,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i11-bc-rail-pack",
    "slug": "bc-rail-pack",
    "cats": [
     "reskins",
@@ -13786,8 +13786,8 @@
    "lastmod": ""
   },
   {
-   "id": 11,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i11-bc-rail-pack",
+   "id": 246,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i246-bc-rail-pack",
    "slug": "bc-rail-pack",
    "cats": [
     "reskins",
@@ -14127,8 +14127,8 @@
    "lastmod": ""
   },
   {
-   "id": 256,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i256-canadian-mixed-revenue-locomotives",
+   "id": 5,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i5-canadian-mixed-revenue-locomotives",
    "slug": "canadian-mixed-revenue-locomotives",
    "cats": [
     "reskins",
@@ -14138,8 +14138,8 @@
    "lastmod": ""
   },
   {
-   "id": 5,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i5-canadian-mixed-revenue-locomotives",
+   "id": 256,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i256-canadian-mixed-revenue-locomotives",
    "slug": "canadian-mixed-revenue-locomotives",
    "cats": [
     "reskins",
@@ -14215,8 +14215,8 @@
    "lastmod": ""
   },
   {
-   "id": 6,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i6-canadian-shortlines-pack",
+   "id": 247,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i247-canadian-shortlines-pack",
    "slug": "canadian-shortlines-pack",
    "cats": [
     "reskins",
@@ -14226,8 +14226,8 @@
    "lastmod": ""
   },
   {
-   "id": 247,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i247-canadian-shortlines-pack",
+   "id": 6,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i6-canadian-shortlines-pack",
    "slug": "canadian-shortlines-pack",
    "cats": [
     "reskins",
@@ -14479,8 +14479,8 @@
    "lastmod": ""
   },
   {
-   "id": 1792,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1792-cnw-sd40",
+   "id": 1498,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1498-cnw-sd40",
    "slug": "cnw-sd40",
    "cats": [
     "reskins",
@@ -14490,8 +14490,8 @@
    "lastmod": ""
   },
   {
-   "id": 1498,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1498-cnw-sd40",
+   "id": 1792,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1792-cnw-sd40",
    "slug": "cnw-sd40",
    "cats": [
     "reskins",
@@ -18252,8 +18252,8 @@
    "lastmod": ""
   },
   {
-   "id": 246,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i246-bc-rail-pack",
+   "id": 11,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i11-bc-rail-pack",
    "slug": "bc-rail-pack",
    "cats": [
     "reskins",
@@ -18263,8 +18263,8 @@
    "lastmod": ""
   },
   {
-   "id": 11,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i11-bc-rail-pack",
+   "id": 246,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i246-bc-rail-pack",
    "slug": "bc-rail-pack",
    "cats": [
     "reskins",
@@ -18604,8 +18604,8 @@
    "lastmod": ""
   },
   {
-   "id": 256,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i256-canadian-mixed-revenue-locomotives",
+   "id": 5,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i5-canadian-mixed-revenue-locomotives",
    "slug": "canadian-mixed-revenue-locomotives",
    "cats": [
     "reskins",
@@ -18615,8 +18615,8 @@
    "lastmod": ""
   },
   {
-   "id": 5,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i5-canadian-mixed-revenue-locomotives",
+   "id": 256,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i256-canadian-mixed-revenue-locomotives",
    "slug": "canadian-mixed-revenue-locomotives",
    "cats": [
     "reskins",
@@ -18692,8 +18692,8 @@
    "lastmod": ""
   },
   {
-   "id": 6,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i6-canadian-shortlines-pack",
+   "id": 247,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i247-canadian-shortlines-pack",
    "slug": "canadian-shortlines-pack",
    "cats": [
     "reskins",
@@ -18703,8 +18703,8 @@
    "lastmod": ""
   },
   {
-   "id": 247,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i247-canadian-shortlines-pack",
+   "id": 6,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i6-canadian-shortlines-pack",
    "slug": "canadian-shortlines-pack",
    "cats": [
     "reskins",
@@ -18956,8 +18956,8 @@
    "lastmod": ""
   },
   {
-   "id": 1792,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1792-cnw-sd40",
+   "id": 1498,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1498-cnw-sd40",
    "slug": "cnw-sd40",
    "cats": [
     "reskins",
@@ -18967,8 +18967,8 @@
    "lastmod": ""
   },
   {
-   "id": 1498,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1498-cnw-sd40",
+   "id": 1792,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1792-cnw-sd40",
    "slug": "cnw-sd40",
    "cats": [
     "reskins",
@@ -24720,8 +24720,8 @@
    "lastmod": ""
   },
   {
-   "id": 5751,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
+   "id": 4196,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
    "slug": "37418-loram",
    "cats": [
     "reskins",
@@ -24731,8 +24731,8 @@
    "lastmod": ""
   },
   {
-   "id": 4196,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
+   "id": 5751,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
    "slug": "37418-loram",
    "cats": [
     "reskins",
@@ -32702,8 +32702,8 @@
    "lastmod": ""
   },
   {
-   "id": 4173,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
+   "id": 5768,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -32712,8 +32712,8 @@
    "lastmod": ""
   },
   {
-   "id": 5768,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
+   "id": 4173,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -49018,8 +49018,8 @@
    "lastmod": ""
   },
   {
-   "id": 246,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i246-bc-rail-pack",
+   "id": 11,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i11-bc-rail-pack",
    "slug": "bc-rail-pack",
    "cats": [
     "reskins",
@@ -49029,8 +49029,8 @@
    "lastmod": ""
   },
   {
-   "id": 11,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i11-bc-rail-pack",
+   "id": 246,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i246-bc-rail-pack",
    "slug": "bc-rail-pack",
    "cats": [
     "reskins",
@@ -49370,8 +49370,8 @@
    "lastmod": ""
   },
   {
-   "id": 256,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i256-canadian-mixed-revenue-locomotives",
+   "id": 5,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i5-canadian-mixed-revenue-locomotives",
    "slug": "canadian-mixed-revenue-locomotives",
    "cats": [
     "reskins",
@@ -49381,8 +49381,8 @@
    "lastmod": ""
   },
   {
-   "id": 5,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i5-canadian-mixed-revenue-locomotives",
+   "id": 256,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i256-canadian-mixed-revenue-locomotives",
    "slug": "canadian-mixed-revenue-locomotives",
    "cats": [
     "reskins",
@@ -49458,8 +49458,8 @@
    "lastmod": ""
   },
   {
-   "id": 6,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i6-canadian-shortlines-pack",
+   "id": 247,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i247-canadian-shortlines-pack",
    "slug": "canadian-shortlines-pack",
    "cats": [
     "reskins",
@@ -49469,8 +49469,8 @@
    "lastmod": ""
   },
   {
-   "id": 247,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i247-canadian-shortlines-pack",
+   "id": 6,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i6-canadian-shortlines-pack",
    "slug": "canadian-shortlines-pack",
    "cats": [
     "reskins",
@@ -49722,8 +49722,8 @@
    "lastmod": ""
   },
   {
-   "id": 1792,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1792-cnw-sd40",
+   "id": 1498,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1498-cnw-sd40",
    "slug": "cnw-sd40",
    "cats": [
     "reskins",
@@ -49733,8 +49733,8 @@
    "lastmod": ""
   },
   {
-   "id": 1498,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1498-cnw-sd40",
+   "id": 1792,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c37-locomotives/i1792-cnw-sd40",
    "slug": "cnw-sd40",
    "cats": [
     "reskins",
@@ -55486,8 +55486,8 @@
    "lastmod": ""
   },
   {
-   "id": 5751,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
+   "id": 4196,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
    "slug": "37418-loram",
    "cats": [
     "reskins",
@@ -55497,8 +55497,8 @@
    "lastmod": ""
   },
   {
-   "id": 4196,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
+   "id": 5751,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
    "slug": "37418-loram",
    "cats": [
     "reskins",
@@ -63468,8 +63468,8 @@
    "lastmod": ""
   },
   {
-   "id": 4173,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
+   "id": 5768,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -63478,8 +63478,8 @@
    "lastmod": ""
   },
   {
-   "id": 5768,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
+   "id": 4173,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -74712,8 +74712,8 @@
    "lastmod": ""
   },
   {
-   "id": 343,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c17-scenario-planner-creations/i343-eastbourne-express",
+   "id": 53,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c17-scenario-planner-creations/i53-eastbourne-express",
    "slug": "eastbourne-express",
    "cats": [
     "scenario-planner-creations"
@@ -74721,8 +74721,8 @@
    "lastmod": ""
   },
   {
-   "id": 53,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c17-scenario-planner-creations/i53-eastbourne-express",
+   "id": 343,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c17-scenario-planner-creations/i343-eastbourne-express",
    "slug": "eastbourne-express",
    "cats": [
     "scenario-planner-creations"
@@ -75756,8 +75756,8 @@
    "lastmod": ""
   },
   {
-   "id": 4035,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i4035-horseshoe-curve-sandbox",
+   "id": 2534,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i2534-horseshoe-curve-sandbox",
    "slug": "horseshoe-curve-sandbox",
    "cats": [
     "pak-file-scenarios"
@@ -75765,8 +75765,8 @@
    "lastmod": ""
   },
   {
-   "id": 2534,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i2534-horseshoe-curve-sandbox",
+   "id": 4035,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i4035-horseshoe-curve-sandbox",
    "slug": "horseshoe-curve-sandbox",
    "cats": [
     "pak-file-scenarios"
@@ -85332,6 +85332,15 @@
    "lastmod": ""
   },
   {
+   "id": 8653,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c113-announcements/i8653-obb-announcements-pack",
+   "slug": "obb-announcements-pack",
+   "cats": [
+    "announcements"
+   ],
+   "lastmod": ""
+  },
+  {
    "id": 6224,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c113-announcements/i6224-obb-railjet-announcements-murzzuschlag-wiener-neustadt",
    "slug": "obb-railjet-announcements-murzzuschlag-wiener-neustadt",
@@ -86034,6 +86043,15 @@
    "lastmod": ""
   },
   {
+   "id": 8655,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c106-menu-music/i8655-train-sim-world-8-menu-music-concept",
+   "slug": "train-sim-world-8-menu-music-concept",
+   "cats": [
+    "menu-music"
+   ],
+   "lastmod": ""
+  },
+  {
    "id": 5326,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c106-menu-music/i5326-tsw-menu-music-mods-tsw2020-button-sounds",
    "slug": "tsw-menu-music-mods-tsw2020-button-sounds",
@@ -86287,8 +86305,8 @@
   },
   {
    "id": 4782,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c111-timetables/i4782-bremen-oldenburg-modern-timetable-2026-v32",
-   "slug": "bremen-oldenburg-modern-timetable-2026-v32",
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c111-timetables/i4782-bremen-oldenburg-modern-timetable-2026-v33",
+   "slug": "bremen-oldenburg-modern-timetable-2026-v33",
    "cats": [
     "timetables"
    ],
@@ -87036,6 +87054,15 @@
    "id": 3829,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c109-other/i3829-alexrail-sd40-2",
    "slug": "alexrail-sd40-2",
+   "cats": [
+    "other"
+   ],
+   "lastmod": ""
+  },
+  {
+   "id": 8654,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c109-other/i8654-anime-train-girl-loading-screens",
+   "slug": "anime-train-girl-loading-screens",
    "cats": [
     "other"
    ],
@@ -89368,8 +89395,8 @@
    "lastmod": ""
   },
   {
-   "id": 5751,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
+   "id": 4196,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
    "slug": "37418-loram",
    "cats": [
     "reskins",
@@ -89379,8 +89406,8 @@
    "lastmod": ""
   },
   {
-   "id": 4196,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
+   "id": 5751,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
    "slug": "37418-loram",
    "cats": [
     "reskins",
@@ -97937,8 +97964,8 @@
    "lastmod": ""
   },
   {
-   "id": 343,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c17-scenario-planner-creations/i343-eastbourne-express",
+   "id": 53,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c17-scenario-planner-creations/i53-eastbourne-express",
    "slug": "eastbourne-express",
    "cats": [
     "scenario-planner-creations"
@@ -97946,8 +97973,8 @@
    "lastmod": ""
   },
   {
-   "id": 53,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c17-scenario-planner-creations/i53-eastbourne-express",
+   "id": 343,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c17-scenario-planner-creations/i343-eastbourne-express",
    "slug": "eastbourne-express",
    "cats": [
     "scenario-planner-creations"
@@ -99948,8 +99975,8 @@
    "lastmod": ""
   },
   {
-   "id": 4173,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
+   "id": 5768,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -99958,8 +99985,8 @@
    "lastmod": ""
   },
   {
-   "id": 5768,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
+   "id": 4173,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -102411,8 +102438,8 @@
    "lastmod": ""
   },
   {
-   "id": 4035,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i4035-horseshoe-curve-sandbox",
+   "id": 2534,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i2534-horseshoe-curve-sandbox",
    "slug": "horseshoe-curve-sandbox",
    "cats": [
     "pak-file-scenarios"
@@ -102420,8 +102447,8 @@
    "lastmod": ""
   },
   {
-   "id": 2534,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i2534-horseshoe-curve-sandbox",
+   "id": 4035,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i4035-horseshoe-curve-sandbox",
    "slug": "horseshoe-curve-sandbox",
    "cats": [
     "pak-file-scenarios"
@@ -118052,6 +118079,15 @@
    "lastmod": ""
   },
   {
+   "id": 8653,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c113-announcements/i8653-obb-announcements-pack",
+   "slug": "obb-announcements-pack",
+   "cats": [
+    "announcements"
+   ],
+   "lastmod": ""
+  },
+  {
    "id": 6224,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c113-announcements/i6224-obb-railjet-announcements-murzzuschlag-wiener-neustadt",
    "slug": "obb-railjet-announcements-murzzuschlag-wiener-neustadt",
@@ -118794,6 +118830,15 @@
    "lastmod": ""
   },
   {
+   "id": 8655,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c106-menu-music/i8655-train-sim-world-8-menu-music-concept",
+   "slug": "train-sim-world-8-menu-music-concept",
+   "cats": [
+    "menu-music"
+   ],
+   "lastmod": ""
+  },
+  {
    "id": 5326,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c106-menu-music/i5326-tsw-menu-music-mods-tsw2020-button-sounds",
    "slug": "tsw-menu-music-mods-tsw2020-button-sounds",
@@ -119047,8 +119092,8 @@
   },
   {
    "id": 4782,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c111-timetables/i4782-bremen-oldenburg-modern-timetable-2026-v32",
-   "slug": "bremen-oldenburg-modern-timetable-2026-v32",
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c111-timetables/i4782-bremen-oldenburg-modern-timetable-2026-v33",
+   "slug": "bremen-oldenburg-modern-timetable-2026-v33",
    "cats": [
     "timetables"
    ],
@@ -119796,6 +119841,15 @@
    "id": 3829,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c109-other/i3829-alexrail-sd40-2",
    "slug": "alexrail-sd40-2",
+   "cats": [
+    "other"
+   ],
+   "lastmod": ""
+  },
+  {
+   "id": 8654,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c109-other/i8654-anime-train-girl-loading-screens",
+   "slug": "anime-train-girl-loading-screens",
    "cats": [
     "other"
    ],
