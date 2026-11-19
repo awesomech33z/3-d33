@@ -1,7 +1,7 @@
 {
  "swa": 2,
  "stand": "2026-11-19",
- "refreshedAt": "2026-11-19T07:22:16.732Z",
+ "refreshedAt": "2026-11-19T20:32:59.273Z",
  "wishlist": [
   3493540,
   3663520,
@@ -121,7 +121,7 @@
   {
    "id": 4678800,
    "name": "Train Sim World® 7",
-   "hours": 70.3
+   "hours": 70.5
   }
  ],
  "ownedApps": [],
@@ -154,6 +154,12 @@
    "t": "Cargo Line Vol. 7 - Vans ",
    "pre": "TSW7",
    "d": "2026-11-10",
+   "ty": "other"
+  },
+  "4680790": {
+   "t": "Cargo Line Vol. 8 - Taschenwagen ",
+   "pre": "TSW7",
+   "d": "2026-11-26",
    "ty": "other"
   },
   "4714940": {
