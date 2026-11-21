@@ -1,6 +1,6 @@
 {
- "fetchedAt": "2026-11-20T20:13:06.127Z",
- "count": 11742,
+ "fetchedAt": "2026-11-21T07:02:43.185Z",
+ "count": 11746,
  "items": [
   {
    "id": 7205,
@@ -1708,17 +1708,6 @@
    "lastmod": ""
   },
   {
-   "id": 5751,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
-   "slug": "37418-loram",
-   "cats": [
-    "reskins",
-    "british",
-    "british-locomotives"
-   ],
-   "lastmod": ""
-  },
-  {
    "id": 4196,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
    "slug": "37418-loram",
@@ -1730,9 +1719,9 @@
    "lastmod": ""
   },
   {
-   "id": 5755,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5755-37427-regional-scotrail",
-   "slug": "37427-regional-scotrail",
+   "id": 5751,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
+   "slug": "37418-loram",
    "cats": [
     "reskins",
     "british",
@@ -1743,6 +1732,17 @@
   {
    "id": 4608,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4608-37427-regional-scotrail",
+   "slug": "37427-regional-scotrail",
+   "cats": [
+    "reskins",
+    "british",
+    "british-locomotives"
+   ],
+   "lastmod": ""
+  },
+  {
+   "id": 5755,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5755-37427-regional-scotrail",
    "slug": "37427-regional-scotrail",
    "cats": [
     "reskins",
@@ -16844,8 +16844,8 @@
    "lastmod": ""
   },
   {
-   "id": 408,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i408-bn-autorack-reskin",
+   "id": 403,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i403-bn-autorack-reskin",
    "slug": "bn-autorack-reskin",
    "cats": [
     "reskins",
@@ -16855,8 +16855,8 @@
    "lastmod": ""
   },
   {
-   "id": 403,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i403-bn-autorack-reskin",
+   "id": 408,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i408-bn-autorack-reskin",
    "slug": "bn-autorack-reskin",
    "cats": [
     "reskins",
@@ -17064,8 +17064,8 @@
    "lastmod": ""
   },
   {
-   "id": 1200,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i1200-conrail-autorack",
+   "id": 409,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i409-conrail-autorack",
    "slug": "conrail-autorack",
    "cats": [
     "reskins",
@@ -17075,8 +17075,8 @@
    "lastmod": ""
   },
   {
-   "id": 409,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i409-conrail-autorack",
+   "id": 1200,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i1200-conrail-autorack",
    "slug": "conrail-autorack",
    "cats": [
     "reskins",
@@ -21321,8 +21321,8 @@
    "lastmod": ""
   },
   {
-   "id": 408,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i408-bn-autorack-reskin",
+   "id": 403,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i403-bn-autorack-reskin",
    "slug": "bn-autorack-reskin",
    "cats": [
     "reskins",
@@ -21332,8 +21332,8 @@
    "lastmod": ""
   },
   {
-   "id": 403,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i403-bn-autorack-reskin",
+   "id": 408,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i408-bn-autorack-reskin",
    "slug": "bn-autorack-reskin",
    "cats": [
     "reskins",
@@ -21541,8 +21541,8 @@
    "lastmod": ""
   },
   {
-   "id": 1200,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i1200-conrail-autorack",
+   "id": 409,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i409-conrail-autorack",
    "slug": "conrail-autorack",
    "cats": [
     "reskins",
@@ -21552,8 +21552,8 @@
    "lastmod": ""
   },
   {
-   "id": 409,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i409-conrail-autorack",
+   "id": 1200,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i1200-conrail-autorack",
    "slug": "conrail-autorack",
    "cats": [
     "reskins",
@@ -24720,17 +24720,6 @@
    "lastmod": ""
   },
   {
-   "id": 5751,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
-   "slug": "37418-loram",
-   "cats": [
-    "reskins",
-    "british",
-    "british-locomotives"
-   ],
-   "lastmod": ""
-  },
-  {
    "id": 4196,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
    "slug": "37418-loram",
@@ -24742,9 +24731,9 @@
    "lastmod": ""
   },
   {
-   "id": 5755,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5755-37427-regional-scotrail",
-   "slug": "37427-regional-scotrail",
+   "id": 5751,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
+   "slug": "37418-loram",
    "cats": [
     "reskins",
     "british",
@@ -24755,6 +24744,17 @@
   {
    "id": 4608,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4608-37427-regional-scotrail",
+   "slug": "37427-regional-scotrail",
+   "cats": [
+    "reskins",
+    "british",
+    "british-locomotives"
+   ],
+   "lastmod": ""
+  },
+  {
+   "id": 5755,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5755-37427-regional-scotrail",
    "slug": "37427-regional-scotrail",
    "cats": [
     "reskins",
@@ -32512,8 +32512,8 @@
    "lastmod": ""
   },
   {
-   "id": 4669,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4669-323251-revised-west-yorkshire-pte-red-buttermilk",
+   "id": 6169,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i6169-323251-revised-west-yorkshire-pte-red-buttermilk",
    "slug": "323251-revised-west-yorkshire-pte-red-buttermilk",
    "cats": [
     "reskins",
@@ -32522,8 +32522,8 @@
    "lastmod": ""
   },
   {
-   "id": 6169,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i6169-323251-revised-west-yorkshire-pte-red-buttermilk",
+   "id": 4669,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4669-323251-revised-west-yorkshire-pte-red-buttermilk",
    "slug": "323251-revised-west-yorkshire-pte-red-buttermilk",
    "cats": [
     "reskins",
@@ -32632,8 +32632,8 @@
    "lastmod": ""
   },
   {
-   "id": 5743,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5743-37403-80s-scot-rail",
+   "id": 4192,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4192-37403-80s-scot-rail",
    "slug": "37403-80s-scot-rail",
    "cats": [
     "reskins",
@@ -32642,8 +32642,8 @@
    "lastmod": ""
   },
   {
-   "id": 4192,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4192-37403-80s-scot-rail",
+   "id": 5743,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5743-37403-80s-scot-rail",
    "slug": "37403-80s-scot-rail",
    "cats": [
     "reskins",
@@ -32702,8 +32702,8 @@
    "lastmod": ""
   },
   {
-   "id": 4173,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
+   "id": 5768,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -32712,8 +32712,8 @@
    "lastmod": ""
   },
   {
-   "id": 5768,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
+   "id": 4173,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -41669,6 +41669,17 @@
    "lastmod": ""
   },
   {
+   "id": 8681,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c18-pak-file-skins/c58-british/c112-locomotives/i8681-class-395-livery-pack-2009-2025",
+   "slug": "class-395-livery-pack-2009-2025",
+   "cats": [
+    "pak-file-skins",
+    "british",
+    "locomotives"
+   ],
+   "lastmod": ""
+  },
+  {
    "id": 657,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c18-pak-file-skins/c58-british/c112-locomotives/i657-class-395-pre-10-year-426",
    "slug": "class-395-pre-10-year-426",
@@ -44441,6 +44452,17 @@
    "lastmod": ""
   },
   {
+   "id": 8681,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c18-pak-file-skins/c58-british/c112-locomotives/i8681-class-395-livery-pack-2009-2025",
+   "slug": "class-395-livery-pack-2009-2025",
+   "cats": [
+    "pak-file-skins",
+    "british",
+    "locomotives"
+   ],
+   "lastmod": ""
+  },
+  {
    "id": 657,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c18-pak-file-skins/c58-british/c112-locomotives/i657-class-395-pre-10-year-426",
    "slug": "class-395-pre-10-year-426",
@@ -46105,6 +46127,17 @@
    "id": 1471,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c18-pak-file-skins/c58-british/c112-locomotives/i1471-class-37-rf-426",
    "slug": "class-37-rf-426",
+   "cats": [
+    "pak-file-skins",
+    "british",
+    "locomotives"
+   ],
+   "lastmod": ""
+  },
+  {
+   "id": 8681,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c18-pak-file-skins/c58-british/c112-locomotives/i8681-class-395-livery-pack-2009-2025",
+   "slug": "class-395-livery-pack-2009-2025",
    "cats": [
     "pak-file-skins",
     "british",
@@ -47368,8 +47401,8 @@
    "lastmod": ""
   },
   {
-   "id": 408,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i408-bn-autorack-reskin",
+   "id": 403,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i403-bn-autorack-reskin",
    "slug": "bn-autorack-reskin",
    "cats": [
     "reskins",
@@ -47379,8 +47412,8 @@
    "lastmod": ""
   },
   {
-   "id": 403,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i403-bn-autorack-reskin",
+   "id": 408,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i408-bn-autorack-reskin",
    "slug": "bn-autorack-reskin",
    "cats": [
     "reskins",
@@ -47588,8 +47621,8 @@
    "lastmod": ""
   },
   {
-   "id": 1200,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i1200-conrail-autorack",
+   "id": 409,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i409-conrail-autorack",
    "slug": "conrail-autorack",
    "cats": [
     "reskins",
@@ -47599,8 +47632,8 @@
    "lastmod": ""
   },
   {
-   "id": 409,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i409-conrail-autorack",
+   "id": 1200,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i1200-conrail-autorack",
    "slug": "conrail-autorack",
    "cats": [
     "reskins",
@@ -52087,8 +52120,8 @@
    "lastmod": ""
   },
   {
-   "id": 408,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i408-bn-autorack-reskin",
+   "id": 403,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i403-bn-autorack-reskin",
    "slug": "bn-autorack-reskin",
    "cats": [
     "reskins",
@@ -52098,8 +52131,8 @@
    "lastmod": ""
   },
   {
-   "id": 403,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i403-bn-autorack-reskin",
+   "id": 408,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i408-bn-autorack-reskin",
    "slug": "bn-autorack-reskin",
    "cats": [
     "reskins",
@@ -52307,8 +52340,8 @@
    "lastmod": ""
   },
   {
-   "id": 1200,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i1200-conrail-autorack",
+   "id": 409,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i409-conrail-autorack",
    "slug": "conrail-autorack",
    "cats": [
     "reskins",
@@ -52318,8 +52351,8 @@
    "lastmod": ""
   },
   {
-   "id": 409,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i409-conrail-autorack",
+   "id": 1200,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c31-north-american/c38-rolling-stock/i1200-conrail-autorack",
    "slug": "conrail-autorack",
    "cats": [
     "reskins",
@@ -55486,17 +55519,6 @@
    "lastmod": ""
   },
   {
-   "id": 5751,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
-   "slug": "37418-loram",
-   "cats": [
-    "reskins",
-    "british",
-    "british-locomotives"
-   ],
-   "lastmod": ""
-  },
-  {
    "id": 4196,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
    "slug": "37418-loram",
@@ -55508,9 +55530,9 @@
    "lastmod": ""
   },
   {
-   "id": 5755,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5755-37427-regional-scotrail",
-   "slug": "37427-regional-scotrail",
+   "id": 5751,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
+   "slug": "37418-loram",
    "cats": [
     "reskins",
     "british",
@@ -55521,6 +55543,17 @@
   {
    "id": 4608,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4608-37427-regional-scotrail",
+   "slug": "37427-regional-scotrail",
+   "cats": [
+    "reskins",
+    "british",
+    "british-locomotives"
+   ],
+   "lastmod": ""
+  },
+  {
+   "id": 5755,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5755-37427-regional-scotrail",
    "slug": "37427-regional-scotrail",
    "cats": [
     "reskins",
@@ -63278,8 +63311,8 @@
    "lastmod": ""
   },
   {
-   "id": 4669,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4669-323251-revised-west-yorkshire-pte-red-buttermilk",
+   "id": 6169,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i6169-323251-revised-west-yorkshire-pte-red-buttermilk",
    "slug": "323251-revised-west-yorkshire-pte-red-buttermilk",
    "cats": [
     "reskins",
@@ -63288,8 +63321,8 @@
    "lastmod": ""
   },
   {
-   "id": 6169,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i6169-323251-revised-west-yorkshire-pte-red-buttermilk",
+   "id": 4669,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4669-323251-revised-west-yorkshire-pte-red-buttermilk",
    "slug": "323251-revised-west-yorkshire-pte-red-buttermilk",
    "cats": [
     "reskins",
@@ -63398,8 +63431,8 @@
    "lastmod": ""
   },
   {
-   "id": 5743,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5743-37403-80s-scot-rail",
+   "id": 4192,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4192-37403-80s-scot-rail",
    "slug": "37403-80s-scot-rail",
    "cats": [
     "reskins",
@@ -63408,8 +63441,8 @@
    "lastmod": ""
   },
   {
-   "id": 4192,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4192-37403-80s-scot-rail",
+   "id": 5743,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5743-37403-80s-scot-rail",
    "slug": "37403-80s-scot-rail",
    "cats": [
     "reskins",
@@ -63468,8 +63501,8 @@
    "lastmod": ""
   },
   {
-   "id": 4173,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
+   "id": 5768,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -63478,8 +63511,8 @@
    "lastmod": ""
   },
   {
-   "id": 5768,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
+   "id": 4173,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -72801,6 +72834,17 @@
    "id": 1471,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c18-pak-file-skins/c58-british/c112-locomotives/i1471-class-37-rf-426",
    "slug": "class-37-rf-426",
+   "cats": [
+    "pak-file-skins",
+    "british",
+    "locomotives"
+   ],
+   "lastmod": ""
+  },
+  {
+   "id": 8681,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c18-pak-file-skins/c58-british/c112-locomotives/i8681-class-395-livery-pack-2009-2025",
+   "slug": "class-395-livery-pack-2009-2025",
    "cats": [
     "pak-file-skins",
     "british",
@@ -75756,8 +75800,8 @@
    "lastmod": ""
   },
   {
-   "id": 2534,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i2534-horseshoe-curve-sandbox",
+   "id": 4035,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i4035-horseshoe-curve-sandbox",
    "slug": "horseshoe-curve-sandbox",
    "cats": [
     "pak-file-scenarios"
@@ -75765,8 +75809,8 @@
    "lastmod": ""
   },
   {
-   "id": 4035,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i4035-horseshoe-curve-sandbox",
+   "id": 2534,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i2534-horseshoe-curve-sandbox",
    "slug": "horseshoe-curve-sandbox",
    "cats": [
     "pak-file-scenarios"
@@ -86214,6 +86258,15 @@
    "lastmod": ""
   },
   {
+   "id": 8682,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c114-rolling-stock/i8682-hunslet-austerity-0-6-0st",
+   "slug": "hunslet-austerity-0-6-0st",
+   "cats": [
+    "rolling-stock"
+   ],
+   "lastmod": ""
+  },
+  {
    "id": 6334,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c114-rolling-stock/i6334-ice-3m-etcs-mfa",
    "slug": "ice-3m-etcs-mfa",
@@ -86289,15 +86342,6 @@
    "id": 8675,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c114-rolling-stock/i8675-train-sim-world-7-west-midlands-railway-br-class-1722-turbostar-dmu",
    "slug": "train-sim-world-7-west-midlands-railway-br-class-1722-turbostar-dmu",
-   "cats": [
-    "rolling-stock"
-   ],
-   "lastmod": ""
-  },
-  {
-   "id": 8616,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c114-rolling-stock/i8616-train-sim-world-7-west-midlands-railway-london-overground-br-class-1720-turbostar-dmu",
-   "slug": "train-sim-world-7-west-midlands-railway-london-overground-br-class-1720-turbostar-dmu",
    "cats": [
     "rolling-stock"
    ],
@@ -89494,17 +89538,6 @@
    "lastmod": ""
   },
   {
-   "id": 5751,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
-   "slug": "37418-loram",
-   "cats": [
-    "reskins",
-    "british",
-    "british-locomotives"
-   ],
-   "lastmod": ""
-  },
-  {
    "id": 4196,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4196-37418-loram",
    "slug": "37418-loram",
@@ -89516,9 +89549,9 @@
    "lastmod": ""
   },
   {
-   "id": 5755,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5755-37427-regional-scotrail",
-   "slug": "37427-regional-scotrail",
+   "id": 5751,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5751-37418-loram",
+   "slug": "37418-loram",
    "cats": [
     "reskins",
     "british",
@@ -89529,6 +89562,17 @@
   {
    "id": 4608,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i4608-37427-regional-scotrail",
+   "slug": "37427-regional-scotrail",
+   "cats": [
+    "reskins",
+    "british",
+    "british-locomotives"
+   ],
+   "lastmod": ""
+  },
+  {
+   "id": 5755,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c83-british/c33-british-locomotives/i5755-37427-regional-scotrail",
    "slug": "37427-regional-scotrail",
    "cats": [
     "reskins",
@@ -99884,8 +99928,8 @@
    "lastmod": ""
   },
   {
-   "id": 4669,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4669-323251-revised-west-yorkshire-pte-red-buttermilk",
+   "id": 6169,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i6169-323251-revised-west-yorkshire-pte-red-buttermilk",
    "slug": "323251-revised-west-yorkshire-pte-red-buttermilk",
    "cats": [
     "reskins",
@@ -99894,8 +99938,8 @@
    "lastmod": ""
   },
   {
-   "id": 6169,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i6169-323251-revised-west-yorkshire-pte-red-buttermilk",
+   "id": 4669,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4669-323251-revised-west-yorkshire-pte-red-buttermilk",
    "slug": "323251-revised-west-yorkshire-pte-red-buttermilk",
    "cats": [
     "reskins",
@@ -100004,8 +100048,8 @@
    "lastmod": ""
   },
   {
-   "id": 5743,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5743-37403-80s-scot-rail",
+   "id": 4192,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4192-37403-80s-scot-rail",
    "slug": "37403-80s-scot-rail",
    "cats": [
     "reskins",
@@ -100014,8 +100058,8 @@
    "lastmod": ""
   },
   {
-   "id": 4192,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4192-37403-80s-scot-rail",
+   "id": 5743,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5743-37403-80s-scot-rail",
    "slug": "37403-80s-scot-rail",
    "cats": [
     "reskins",
@@ -100074,8 +100118,8 @@
    "lastmod": ""
   },
   {
-   "id": 4173,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
+   "id": 5768,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -100084,8 +100128,8 @@
    "lastmod": ""
   },
   {
-   "id": 5768,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i5768-37681-revised-network-south-east",
+   "id": 4173,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c16-reskins/c34-british-fictional/i4173-37681-revised-network-south-east",
    "slug": "37681-revised-network-south-east",
    "cats": [
     "reskins",
@@ -102537,8 +102581,8 @@
    "lastmod": ""
   },
   {
-   "id": 2534,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i2534-horseshoe-curve-sandbox",
+   "id": 4035,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i4035-horseshoe-curve-sandbox",
    "slug": "horseshoe-curve-sandbox",
    "cats": [
     "pak-file-scenarios"
@@ -102546,8 +102590,8 @@
    "lastmod": ""
   },
   {
-   "id": 4035,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i4035-horseshoe-curve-sandbox",
+   "id": 2534,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c100-pak-file-scenarios/i2534-horseshoe-curve-sandbox",
    "slug": "horseshoe-curve-sandbox",
    "cats": [
     "pak-file-scenarios"
@@ -119100,6 +119144,15 @@
    "lastmod": ""
   },
   {
+   "id": 8682,
+   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c114-rolling-stock/i8682-hunslet-austerity-0-6-0st",
+   "slug": "hunslet-austerity-0-6-0st",
+   "cats": [
+    "rolling-stock"
+   ],
+   "lastmod": ""
+  },
+  {
    "id": 6334,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c114-rolling-stock/i6334-ice-3m-etcs-mfa",
    "slug": "ice-3m-etcs-mfa",
@@ -119175,15 +119228,6 @@
    "id": 8675,
    "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c114-rolling-stock/i8675-train-sim-world-7-west-midlands-railway-br-class-1722-turbostar-dmu",
    "slug": "train-sim-world-7-west-midlands-railway-br-class-1722-turbostar-dmu",
-   "cats": [
-    "rolling-stock"
-   ],
-   "lastmod": ""
-  },
-  {
-   "id": 8616,
-   "url": "https://www.trainsimcommunity.com/mods/c3-train-sim-world/c114-rolling-stock/i8616-train-sim-world-7-west-midlands-railway-london-overground-br-class-1720-turbostar-dmu",
-   "slug": "train-sim-world-7-west-midlands-railway-london-overground-br-class-1720-turbostar-dmu",
    "cats": [
     "rolling-stock"
    ],
