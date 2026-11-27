@@ -8,7 +8,7 @@
  "state": {
   "swa": 2,
   "stand": "2026-11-27",
-  "refreshedAt": "2026-11-27T08:25:26.747Z",
+  "refreshedAt": "2026-11-27T21:15:12.425Z",
   "wishlist": [
    2707070,
    3493540,
@@ -51,7 +51,7 @@
    {
     "id": 629520,
     "name": "Soundpad",
-    "hours": 2.6
+    "hours": 3.2
    },
    {
     "id": 850170,
@@ -136,7 +136,7 @@
    {
     "id": 4678800,
     "name": "Train Sim World® 7",
-    "hours": 78.5
+    "hours": 80
    }
   ],
   "ownedApps": [],
@@ -3727,7 +3727,7 @@
   "steamId": "76561198765454534"
  },
  "mods": {
-  "count": 11699,
-  "fetchedAt": "2026-11-27T08:25:29.138Z"
+  "count": 11701,
+  "fetchedAt": "2026-11-27T21:15:14.607Z"
  }
 }
